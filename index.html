@@ -440,65 +440,112 @@ const FLAGS = {
 };
 const F = t => FLAGS[t] || "🏳";
 
+// ── VERIFIED FROM FIFA.COM Jun 19 2026 ──────────────────────
 const FALLBACK_RESULTS = [
-  {group:"A",home:"Mexico",away:"South Africa",hg:2,ag:0,date:"Jun 11",status:"FT"},
-  {group:"A",home:"South Korea",away:"Czechia",hg:2,ag:1,date:"Jun 11",status:"FT"},
-  {group:"B",home:"Canada",away:"Bosnia & Herz.",hg:1,ag:1,date:"Jun 12",status:"FT"},
-  {group:"D",home:"USA",away:"Paraguay",hg:4,ag:1,date:"Jun 12",status:"FT"},
-  {group:"C",home:"Scotland",away:"Haiti",hg:1,ag:0,date:"Jun 13",status:"FT"},
-  {group:"D",home:"Australia",away:"Türkiye",hg:2,ag:0,date:"Jun 13",status:"FT"},
-  {group:"B",home:"Qatar",away:"Switzerland",hg:1,ag:1,date:"Jun 13",status:"FT"},
-  {group:"E",home:"Germany",away:"Curaçao",hg:7,ag:1,date:"Jun 14",status:"FT"},
-  {group:"E",home:"Côte d'Ivoire",away:"Ecuador",hg:1,ag:0,date:"Jun 14",status:"FT"},
-  {group:"F",home:"Netherlands",away:"Japan",hg:2,ag:2,date:"Jun 14",status:"FT"},
-  {group:"F",home:"Sweden",away:"Tunisia",hg:5,ag:1,date:"Jun 14",status:"FT"},
-  {group:"C",home:"Brazil",away:"Morocco",hg:1,ag:1,date:"Jun 14",status:"FT"},
-  {group:"G",home:"Belgium",away:"Egypt",hg:1,ag:1,date:"Jun 15",status:"FT"},
-  {group:"G",home:"Iran",away:"New Zealand",hg:2,ag:2,date:"Jun 15",status:"FT"},
-  {group:"H",home:"Spain",away:"Cape Verde",hg:0,ag:0,date:"Jun 15",status:"FT"},
-  {group:"H",home:"Saudi Arabia",away:"Uruguay",hg:1,ag:1,date:"Jun 15",status:"FT"},
-  {group:"I",home:"France",away:"Senegal",hg:3,ag:1,date:"Jun 16",status:"FT"},
-  {group:"I",home:"Norway",away:"Iraq",hg:4,ag:1,date:"Jun 16",status:"FT"},
-  {group:"J",home:"Argentina",away:"Algeria",hg:3,ag:0,date:"Jun 16",status:"FT"},
-  {group:"J",home:"Austria",away:"Jordan",hg:3,ag:1,date:"Jun 17",status:"FT"},
-  {group:"K",home:"Portugal",away:"DR Congo",hg:1,ag:1,date:"Jun 17",status:"FT"},
-  {group:"K",home:"Colombia",away:"Uzbekistan",hg:3,ag:1,date:"Jun 17",status:"FT"},
-  {group:"L",home:"England",away:"Croatia",hg:4,ag:2,date:"Jun 17",status:"FT"},
-  {group:"L",home:"Ghana",away:"Panama",hg:1,ag:0,date:"Jun 17",status:"FT"},
-  {group:"A",home:"South Africa",away:"Czechia",hg:1,ag:1,date:"Jun 18",status:"FT"},
-  {group:"B",home:"Switzerland",away:"Bosnia & Herz.",hg:4,ag:1,date:"Jun 18",status:"FT"},
-  {group:"B",home:"Canada",away:"Qatar",hg:6,ag:0,date:"Jun 18",status:"FT"},
+  // ── MATCHDAY 1 ──
+  {group:"A",home:"Mexico",       away:"South Africa",  hg:2,ag:0,date:"Jun 11",status:"FT",venue:"Mexico City"},
+  {group:"A",home:"South Korea",  away:"Czechia",       hg:2,ag:1,date:"Jun 11",status:"FT",venue:"Guadalajara"},
+  {group:"B",home:"Canada",       away:"Bosnia & Herz.",hg:1,ag:1,date:"Jun 12",status:"FT",venue:"Toronto"},
+  {group:"D",home:"USA",          away:"Paraguay",      hg:4,ag:1,date:"Jun 12",status:"FT",venue:"Los Angeles"},
+  {group:"B",home:"Qatar",        away:"Switzerland",   hg:1,ag:1,date:"Jun 13",status:"FT",venue:"San Francisco"},
+  {group:"C",home:"Brazil",       away:"Morocco",       hg:1,ag:1,date:"Jun 13",status:"FT",venue:"New York/NJ"},
+  {group:"C",home:"Haiti",        away:"Scotland",      hg:0,ag:1,date:"Jun 13",status:"FT",venue:"Boston"},
+  {group:"D",home:"Australia",    away:"Türkiye",       hg:2,ag:0,date:"Jun 13",status:"FT",venue:"Vancouver"},
+  {group:"E",home:"Germany",      away:"Curaçao",       hg:7,ag:1,date:"Jun 14",status:"FT",venue:"Houston"},
+  {group:"F",home:"Netherlands",  away:"Japan",         hg:2,ag:2,date:"Jun 14",status:"FT",venue:"Dallas"},
+  {group:"E",home:"Côte d'Ivoire",away:"Ecuador",       hg:1,ag:0,date:"Jun 14",status:"FT",venue:"Philadelphia"},
+  {group:"F",home:"Sweden",       away:"Tunisia",       hg:5,ag:1,date:"Jun 14",status:"FT",venue:"Monterrey"},
+  {group:"H",home:"Spain",        away:"Cape Verde",    hg:0,ag:0,date:"Jun 15",status:"FT",venue:"Atlanta"},
+  {group:"G",home:"Belgium",      away:"Egypt",         hg:1,ag:1,date:"Jun 15",status:"FT",venue:"Seattle"},
+  {group:"H",home:"Saudi Arabia", away:"Uruguay",       hg:1,ag:1,date:"Jun 15",status:"FT",venue:"Miami"},
+  {group:"G",home:"Iran",         away:"New Zealand",   hg:2,ag:2,date:"Jun 15",status:"FT",venue:"Los Angeles"},
+  {group:"I",home:"France",       away:"Senegal",       hg:3,ag:1,date:"Jun 16",status:"FT",venue:"New York/NJ"},
+  {group:"I",home:"Iraq",         away:"Norway",        hg:1,ag:4,date:"Jun 16",status:"FT",venue:"Boston"},
+  {group:"J",home:"Argentina",    away:"Algeria",       hg:3,ag:0,date:"Jun 16",status:"FT",venue:"Kansas City"},
+  {group:"J",home:"Austria",      away:"Jordan",        hg:3,ag:1,date:"Jun 17",status:"FT",venue:"San Francisco"},
+  {group:"K",home:"Portugal",     away:"DR Congo",      hg:1,ag:1,date:"Jun 17",status:"FT",venue:"Houston"},
+  {group:"L",home:"England",      away:"Croatia",       hg:4,ag:2,date:"Jun 17",status:"FT",venue:"Dallas"},
+  {group:"L",home:"Ghana",        away:"Panama",        hg:1,ag:0,date:"Jun 17",status:"FT",venue:"Toronto"},
+  {group:"K",home:"Uzbekistan",   away:"Colombia",      hg:1,ag:3,date:"Jun 17",status:"FT",venue:"Mexico City"},
+  // ── MATCHDAY 2 ──
+  {group:"A",home:"Czechia",      away:"South Africa",  hg:1,ag:1,date:"Jun 18",status:"FT",venue:"Atlanta"},
+  {group:"B",home:"Switzerland",  away:"Bosnia & Herz.",hg:4,ag:1,date:"Jun 18",status:"FT",venue:"Los Angeles"},
+  {group:"B",home:"Canada",       away:"Qatar",         hg:6,ag:0,date:"Jun 18",status:"FT",venue:"Vancouver"},
+  {group:"A",home:"Mexico",       away:"South Korea",   hg:1,ag:0,date:"Jun 18",status:"FT",venue:"Guadalajara"},
 ];
 
+// ── FULL FIXTURE LIST FROM FIFA.COM ─────────────────────────
 const FALLBACK_UPCOMING = [
-  {group:"A",home:"Mexico",away:"South Korea",date:"Jun 18",time:"9 PM ET",venue:"Guadalajara"},
-  {group:"D",home:"USA",away:"Australia",date:"Jun 19",time:"3 PM ET",venue:"Seattle"},
-  {group:"C",home:"Morocco",away:"Haiti",date:"Jun 19",time:"6 PM ET",venue:"Dallas"},
-  {group:"C",home:"Brazil",away:"Scotland",date:"Jun 20",time:"9 PM ET",venue:"Miami"},
-  {group:"D",home:"Paraguay",away:"Türkiye",date:"Jun 20",time:"10 PM ET",venue:"San Francisco"},
-  {group:"E",home:"Germany",away:"Côte d'Ivoire",date:"Jun 20",time:"4 PM ET",venue:"Toronto"},
-  {group:"F",home:"Netherlands",away:"Sweden",date:"Jun 20",time:"1 PM ET",venue:"Houston"},
-  {group:"F",home:"Japan",away:"Tunisia",date:"Jun 21",time:"12 AM ET",venue:"Kansas City"},
-  {group:"G",home:"Belgium",away:"Iran",date:"Jun 21",time:"3 PM ET",venue:"Los Angeles"},
-  {group:"H",home:"Spain",away:"Saudi Arabia",date:"Jun 21",time:"12 PM ET",venue:"Atlanta"},
-  {group:"G",home:"New Zealand",away:"Egypt",date:"Jun 21",time:"6 PM ET",venue:"Vancouver"},
-  {group:"H",home:"Uruguay",away:"Cape Verde",date:"Jun 21",time:"6 PM ET",venue:"Miami"},
-  {group:"J",home:"Argentina",away:"Austria",date:"Jun 22",time:"1 PM ET",venue:"Dallas"},
-  {group:"I",home:"France",away:"Iraq",date:"Jun 22",time:"5 PM ET",venue:"Philadelphia"},
-  {group:"I",home:"Norway",away:"Senegal",date:"Jun 22",time:"8 PM ET",venue:"New York/NJ"},
-  {group:"J",home:"Jordan",away:"Algeria",date:"Jun 22",time:"11 PM ET",venue:"San Francisco"},
-  {group:"K",home:"Portugal",away:"Uzbekistan",date:"Jun 23",time:"1 PM ET",venue:"Houston"},
-  {group:"L",home:"England",away:"Ghana",date:"Jun 23",time:"4 PM ET",venue:"Boston"},
-  {group:"L",home:"Panama",away:"Croatia",date:"Jun 23",time:"7 PM ET",venue:"Toronto"},
-  {group:"K",home:"Colombia",away:"DR Congo",date:"Jun 23",time:"10 PM ET",venue:"Guadalajara"},
-  {group:"A",home:"Mexico",away:"Czechia",date:"Jun 25",time:"5 PM ET",venue:"Los Angeles"},
-  {group:"A",home:"South Korea",away:"South Africa",date:"Jun 25",time:"5 PM ET",venue:"Houston"},
-  {group:"B",home:"Canada",away:"Switzerland",date:"Jun 25",time:"9 PM ET",venue:"Kansas City"},
-  {group:"B",home:"Bosnia & Herz.",away:"Qatar",date:"Jun 25",time:"9 PM ET",venue:"Seattle"},
-  {group:"C",home:"Brazil",away:"Haiti",date:"Jun 26",time:"5 PM ET",venue:"Dallas"},
-  {group:"C",home:"Morocco",away:"Scotland",date:"Jun 26",time:"5 PM ET",venue:"Philadelphia"},
-  {group:"D",home:"USA",away:"Türkiye",date:"Jun 26",time:"9 PM ET",venue:"Los Angeles"},
-  {group:"D",home:"Australia",away:"Paraguay",date:"Jun 26",time:"9 PM ET",venue:"San Francisco"},
+  // Jun 19
+  {group:"D",home:"USA",          away:"Australia",     date:"Jun 19",time:"2 PM ET", venue:"Seattle"},
+  {group:"C",home:"Scotland",     away:"Morocco",       date:"Jun 19",time:"5 PM ET", venue:"Boston"},
+  {group:"C",home:"Brazil",       away:"Haiti",         date:"Jun 19",time:"7:30 PM ET",venue:"Philadelphia"},
+  {group:"D",home:"Türkiye",      away:"Paraguay",      date:"Jun 19",time:"10 PM ET",venue:"San Francisco"},
+  // Jun 20
+  {group:"F",home:"Netherlands",  away:"Sweden",        date:"Jun 20",time:"12 PM ET",venue:"Houston"},
+  {group:"E",home:"Germany",      away:"Côte d'Ivoire", date:"Jun 20",time:"3 PM ET", venue:"Toronto"},
+  {group:"E",home:"Ecuador",      away:"Curaçao",       date:"Jun 20",time:"7 PM ET", venue:"Kansas City"},
+  {group:"F",home:"Tunisia",      away:"Japan",         date:"Jun 20",time:"11 PM ET",venue:"Monterrey"},
+  // Jun 21
+  {group:"H",home:"Spain",        away:"Saudi Arabia",  date:"Jun 21",time:"11 AM ET",venue:"Atlanta"},
+  {group:"G",home:"Belgium",      away:"Iran",          date:"Jun 21",time:"2 PM ET", venue:"Los Angeles"},
+  {group:"H",home:"Uruguay",      away:"Cape Verde",    date:"Jun 21",time:"5 PM ET", venue:"Miami"},
+  {group:"G",home:"New Zealand",  away:"Egypt",         date:"Jun 21",time:"8 PM ET", venue:"Vancouver"},
+  // Jun 22
+  {group:"J",home:"Argentina",    away:"Austria",       date:"Jun 22",time:"12 PM ET",venue:"Dallas"},
+  {group:"I",home:"France",       away:"Iraq",          date:"Jun 22",time:"4 PM ET", venue:"Philadelphia"},
+  {group:"I",home:"Norway",       away:"Senegal",       date:"Jun 22",time:"7 PM ET", venue:"New York/NJ"},
+  {group:"J",home:"Jordan",       away:"Algeria",       date:"Jun 22",time:"10 PM ET",venue:"San Francisco"},
+  // Jun 23
+  {group:"K",home:"Portugal",     away:"Uzbekistan",    date:"Jun 23",time:"12 PM ET",venue:"Houston"},
+  {group:"L",home:"England",      away:"Ghana",         date:"Jun 23",time:"3 PM ET", venue:"Boston"},
+  {group:"L",home:"Panama",       away:"Croatia",       date:"Jun 23",time:"6 PM ET", venue:"Toronto"},
+  {group:"K",home:"Colombia",     away:"DR Congo",      date:"Jun 23",time:"9 PM ET", venue:"Guadalajara"},
+  // Jun 24 — Matchday 3 (all simultaneous within groups)
+  {group:"B",home:"Switzerland",  away:"Canada",        date:"Jun 24",time:"2 PM ET", venue:"Vancouver"},
+  {group:"B",home:"Bosnia & Herz.",away:"Qatar",        date:"Jun 24",time:"2 PM ET", venue:"Seattle"},
+  {group:"C",home:"Scotland",     away:"Brazil",        date:"Jun 24",time:"5 PM ET", venue:"Miami"},
+  {group:"C",home:"Morocco",      away:"Haiti",         date:"Jun 24",time:"5 PM ET", venue:"Atlanta"},
+  {group:"A",home:"Czechia",      away:"Mexico",        date:"Jun 24",time:"8 PM ET", venue:"Mexico City"},
+  {group:"A",home:"South Africa", away:"South Korea",   date:"Jun 24",time:"8 PM ET", venue:"Monterrey"},
+  // Jun 25
+  {group:"E",home:"Curaçao",      away:"Côte d'Ivoire", date:"Jun 25",time:"3 PM ET", venue:"Philadelphia"},
+  {group:"E",home:"Ecuador",      away:"Germany",       date:"Jun 25",time:"3 PM ET", venue:"New York/NJ"},
+  {group:"F",home:"Japan",        away:"Sweden",        date:"Jun 25",time:"6 PM ET", venue:"Dallas"},
+  {group:"F",home:"Tunisia",      away:"Netherlands",   date:"Jun 25",time:"6 PM ET", venue:"Kansas City"},
+  {group:"D",home:"Türkiye",      away:"USA",           date:"Jun 25",time:"9 PM ET", venue:"Los Angeles"},
+  {group:"D",home:"Paraguay",     away:"Australia",     date:"Jun 25",time:"9 PM ET", venue:"San Francisco"},
+  // Jun 26
+  {group:"I",home:"Norway",       away:"France",        date:"Jun 26",time:"2 PM ET", venue:"Boston"},
+  {group:"I",home:"Senegal",      away:"Iraq",          date:"Jun 26",time:"2 PM ET", venue:"Toronto"},
+  {group:"H",home:"Cape Verde",   away:"Saudi Arabia",  date:"Jun 26",time:"7 PM ET", venue:"Houston"},
+  {group:"H",home:"Uruguay",      away:"Spain",         date:"Jun 26",time:"7 PM ET", venue:"Guadalajara"},
+  {group:"G",home:"Egypt",        away:"Iran",          date:"Jun 26",time:"10 PM ET",venue:"Seattle"},
+  {group:"G",home:"New Zealand",  away:"Belgium",       date:"Jun 26",time:"10 PM ET",venue:"Vancouver"},
+  // Jun 27
+  {group:"L",home:"Panama",       away:"England",       date:"Jun 27",time:"4 PM ET", venue:"New York/NJ"},
+  {group:"L",home:"Croatia",      away:"Ghana",         date:"Jun 27",time:"4 PM ET", venue:"Philadelphia"},
+  {group:"K",home:"Colombia",     away:"Portugal",      date:"Jun 27",time:"6:30 PM ET",venue:"Miami"},
+  {group:"K",home:"DR Congo",     away:"Uzbekistan",    date:"Jun 27",time:"6:30 PM ET",venue:"Atlanta"},
+  {group:"J",home:"Algeria",      away:"Austria",       date:"Jun 27",time:"9 PM ET", venue:"Kansas City"},
+  {group:"J",home:"Jordan",       away:"Argentina",     date:"Jun 27",time:"9 PM ET", venue:"Dallas"},
+  // Round of 32
+  {group:"R32",home:"2nd Group A",away:"2nd Group B",   date:"Jun 28",time:"2 PM ET", venue:"Los Angeles"},
+  {group:"R32",home:"1st Group C",away:"3rd (A/B/D/E)", date:"Jun 28",time:"",        venue:"Boston"},
+  {group:"R32",home:"1st Group B",away:"2nd Group A",   date:"Jun 29",time:"",        venue:"Toronto"},
+  {group:"R32",home:"1st Group D",away:"3rd (B/C/E/F)", date:"Jun 29",time:"",        venue:"Dallas"},
+  {group:"R32",home:"1st Group I",away:"3rd (C/D/F/G/H)",date:"Jun 29",time:"",       venue:"New York/NJ"},
+  {group:"R32",home:"2nd Group E",away:"2nd Group I",   date:"Jun 30",time:"",        venue:"Dallas"},
+  {group:"R32",home:"1st Group F",away:"3rd (C/E/F/H/I)",date:"Jun 30",time:"",       venue:"Mexico City"},
+  {group:"R32",home:"1st Group L",away:"3rd (E/H/I/J/K)",date:"Jun 30",time:"",       venue:"Atlanta"},
+  {group:"R32",home:"1st Group D",away:"3rd (B/E/F/I/J)",date:"Jul 1",time:"",        venue:"San Francisco"},
+  {group:"R32",home:"1st Group G",away:"3rd (A/E/H/I/J)",date:"Jul 1",time:"",        venue:"Seattle"},
+  {group:"R32",home:"2nd Group F",away:"1st Group E",   date:"Jul 1",time:"",         venue:"Kansas City"},
+  {group:"R32",home:"1st Group H",away:"2nd Group J",   date:"Jul 2",time:"",         venue:"Los Angeles"},
+  {group:"R32",home:"1st Group B",away:"3rd (E/F/G/I/J)",date:"Jul 2",time:"",        venue:"Vancouver"},
+  {group:"R32",home:"1st Group K",away:"2nd Group L",   date:"Jul 3",time:"",         venue:"Miami"},
+  {group:"R32",home:"1st Group J",away:"2nd Group K",   date:"Jul 3",time:"",         venue:"Houston"},
+  {group:"R32",home:"2nd Group G",away:"2nd Group H",   date:"Jul 3",time:"",         venue:"Philadelphia"},
 ];
 
 const R32 = [
@@ -618,66 +665,177 @@ function saveLS(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch{} }
 // ─────────────────────────────────────────────────────────────
 // DATA FETCH
 // ─────────────────────────────────────────────────────────────
+// ESPN team name → our name map
+const ESPN_NAMES = {
+  "Mexico":"Mexico","South Africa":"South Africa","South Korea":"South Korea","Korea Republic":"South Korea",
+  "Czech Republic":"Czechia","Czechia":"Czechia","Canada":"Canada","Switzerland":"Switzerland",
+  "Bosnia and Herzegovina":"Bosnia & Herz.","Bosnia & Herzegovina":"Bosnia & Herz.","Qatar":"Qatar",
+  "Brazil":"Brazil","Scotland":"Scotland","Morocco":"Morocco","Haiti":"Haiti",
+  "United States":"USA","USA":"USA","Australia":"Australia","Paraguay":"Paraguay","Turkey":"Türkiye","Türkiye":"Türkiye",
+  "Germany":"Germany","Ecuador":"Ecuador","Ivory Coast":"Côte d'Ivoire","Côte d'Ivoire":"Côte d'Ivoire",
+  "Curacao":"Curaçao","Curaçao":"Curaçao","Netherlands":"Netherlands","Japan":"Japan",
+  "Sweden":"Sweden","Tunisia":"Tunisia","Belgium":"Belgium","Egypt":"Egypt","Iran":"Iran",
+  "New Zealand":"New Zealand","Spain":"Spain","Cape Verde":"Cape Verde","Saudi Arabia":"Saudi Arabia",
+  "Uruguay":"Uruguay","France":"France","Norway":"Norway","Senegal":"Senegal","Iraq":"Iraq",
+  "Argentina":"Argentina","Austria":"Austria","Algeria":"Algeria","Jordan":"Jordan",
+  "Portugal":"Portugal","Colombia":"Colombia","DR Congo":"DR Congo","Congo":"DR Congo",
+  "Democratic Republic of the Congo":"DR Congo","Uzbekistan":"Uzbekistan",
+  "England":"England","Croatia":"Croatia","Ghana":"Ghana","Panama":"Panama",
+};
+function normName(n){ return ESPN_NAMES[n]||n; }
+
 async function fetchData(){
   setStatus("loading","Fetching live data…");
-  const apis=[
-    "https://worldcup2026api.vercel.app/api/matches",
-    "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json"
-  ];
-  for(const url of apis){
-    try{
-      const res=await fetch(url,{signal:AbortSignal.timeout(5000)});
-      if(!res.ok) continue;
+
+  // ── SOURCE 1: ESPN public API (best live coverage) ──────
+  try{
+    const res=await fetch(
+      "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard",
+      {signal:AbortSignal.timeout(6000)}
+    );
+    if(res.ok){
       const d=await res.json();
-      if(url.includes("openfootball")) parseOpenFootball(d);
-      else parseAPI(d);
-      ELO=buildElo(ST.results, BASE_ELO);
-      setStatus("ok",`Live · ${new Date().toLocaleTimeString()} · Source: ${url.includes("openfootball")?"GitHub":"API"}`);
-      renderAll(); return;
-    }catch(e){}
-  }
+      if(parseESPN(d)){
+        ELO=buildElo(ST.results,BASE_ELO);
+        setStatus("ok",`ESPN · ${new Date().toLocaleTimeString()}`);
+        renderAll(); return;
+      }
+    }
+  }catch(e){}
+
+  // ── SOURCE 2: community worldcup2026 API ─────────────────
+  try{
+    const res=await fetch(
+      "https://worldcup2026api.vercel.app/api/matches",
+      {signal:AbortSignal.timeout(5000)}
+    );
+    if(res.ok){
+      const d=await res.json();
+      if(parseCommunityAPI(d)){
+        ELO=buildElo(ST.results,BASE_ELO);
+        setStatus("ok",`Community API · ${new Date().toLocaleTimeString()}`);
+        renderAll(); return;
+      }
+    }
+  }catch(e){}
+
+  // ── SOURCE 3: openfootball GitHub JSON ───────────────────
+  try{
+    const res=await fetch(
+      "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json",
+      {signal:AbortSignal.timeout(5000)}
+    );
+    if(res.ok){
+      const d=await res.json();
+      if(parseOpenFootball(d)){
+        ELO=buildElo(ST.results,BASE_ELO);
+        setStatus("ok",`GitHub/OpenFootball · ${new Date().toLocaleTimeString()}`);
+        renderAll(); return;
+      }
+    }
+  }catch(e){}
+
+  // ── FALLBACK: verified FIFA.com static data ───────────────
   useFallback();
 }
-function parseAPI(d){
-  const r=[],u=[],l=[];
-  const m=Array.isArray(d)?d:(d.matches||d.data||[]);
-  m.forEach(x=>{
-    const home=x.home_team?.name||x.homeTeam||"";
-    const away=x.away_team?.name||x.awayTeam||"";
-    const hg=x.home_score??x.homeScore??null;
-    const ag=x.away_score??x.awayScore??null;
-    const s=x.status||x.matchStatus||"scheduled";
-    const g=(x.group||x.groupId||"?").toString().replace("Group ","").toUpperCase().trim();
-    const date=x.date?new Date(x.date).toLocaleDateString("en-US",{month:"short",day:"numeric"}):"TBD";
-    const o={group:g,home,away,hg,ag,date,status:s,time:x.time||"",venue:x.venue?.name||x.stadium||""};
-    if(["completed","FT","finished"].includes(s)) r.push(o);
-    else if(["live","inprogress","LIVE","1H","HT","2H"].includes(s)){o.minute=x.minute||"";l.push(o);}
-    else u.push(o);
-  });
-  if(r.length) ST.results=r;
-  if(u.length) ST.upcoming=u;
-  ST.live=l; ST.source="api";
-}
-function parseOpenFootball(d){
-  const r=[],u=[];
-  (d.rounds||[]).forEach(round=>{
-    const g=(round.name||"?").replace(/group\s*/i,"").charAt(0).toUpperCase();
-    (round.matches||[]).forEach(m=>{
-      const home=m.team1?.name||m.team1||"";
-      const away=m.team2?.name||m.team2||"";
-      const hg=m.score1??null, ag=m.score2??null;
-      const date=m.date||"TBD";
-      if(hg!==null) r.push({group:g,home,away,hg,ag,date,status:"FT"});
-      else u.push({group:g,home,away,hg:null,ag:null,date,status:"scheduled"});
+
+function parseESPN(d){
+  try{
+    const events=d.events||[];
+    if(!events.length) return false;
+    const r=[],u=[],l=[];
+    events.forEach(ev=>{
+      const comp=ev.competitions?.[0]; if(!comp) return;
+      const home=normName(comp.competitors?.find(c=>c.homeAway==="home")?.team?.displayName||"");
+      const away=normName(comp.competitors?.find(c=>c.homeAway==="away")?.team?.displayName||"");
+      if(!home||!away) return;
+      const hg=parseInt(comp.competitors?.find(c=>c.homeAway==="home")?.score)||null;
+      const ag=parseInt(comp.competitors?.find(c=>c.homeAway==="away")?.score)||null;
+      const status=ev.status?.type?.name||"";
+      const clock=ev.status?.displayClock||"";
+      const date=new Date(ev.date).toLocaleDateString("en-US",{month:"short",day:"numeric"});
+      const venue=comp.venue?.fullName||"";
+      // Find group from notes
+      const note=comp.notes?.[0]?.headline||"";
+      const gMatch=note.match(/Group\s+([A-L])/i);
+      const group=gMatch?gMatch[1].toUpperCase():"?";
+      const o={group,home,away,hg:isNaN(hg)?null:hg,ag:isNaN(ag)?null:ag,date,status,venue};
+      if(status==="STATUS_FINAL"||status==="STATUS_FULL_TIME") r.push(o);
+      else if(status==="STATUS_IN_PROGRESS"){o.minute=clock;l.push(o);}
+      else u.push(o);
     });
-  });
-  if(r.length) ST.results=r;
-  if(u.length) ST.upcoming=u;
-  ST.live=[]; ST.source="github";
+    // Only replace if we got meaningful data; always merge with fallback to ensure nothing missing
+    const mergedResults = mergeWithFallback(r, FALLBACK_RESULTS);
+    ST.results=mergedResults;
+    if(u.length) ST.upcoming=u; else ST.upcoming=FALLBACK_UPCOMING;
+    ST.live=l; ST.source="espn";
+    return true;
+  }catch(e){ return false; }
 }
+
+function parseCommunityAPI(d){
+  try{
+    const r=[],u=[],l=[];
+    const m=Array.isArray(d)?d:(d.matches||d.data||[]);
+    if(!m.length) return false;
+    m.forEach(x=>{
+      const home=normName(x.home_team?.name||x.homeTeam||"");
+      const away=normName(x.away_team?.name||x.awayTeam||"");
+      const hg=x.home_score??x.homeScore??null;
+      const ag=x.away_score??x.awayScore??null;
+      const s=x.status||x.matchStatus||"scheduled";
+      const g=(x.group||x.groupId||"?").toString().replace(/group\s*/i,"").toUpperCase().trim().charAt(0);
+      const date=x.date?new Date(x.date).toLocaleDateString("en-US",{month:"short",day:"numeric"}):"TBD";
+      const o={group:g,home,away,hg,ag,date,status:s,time:x.time||"",venue:x.venue?.name||x.stadium||""};
+      if(["completed","FT","finished"].includes(s)) r.push(o);
+      else if(["live","inprogress","LIVE","1H","HT","2H"].includes(s)){o.minute=x.minute||"";l.push(o);}
+      else u.push(o);
+    });
+    ST.results=mergeWithFallback(r,FALLBACK_RESULTS);
+    if(u.length) ST.upcoming=u; else ST.upcoming=FALLBACK_UPCOMING;
+    ST.live=l; ST.source="community";
+    return true;
+  }catch(e){ return false; }
+}
+
+function parseOpenFootball(d){
+  try{
+    const r=[],u=[];
+    (d.rounds||[]).forEach(round=>{
+      const g=(round.name||"?").replace(/group\s*/i,"").trim().charAt(0).toUpperCase();
+      (round.matches||[]).forEach(m=>{
+        const home=normName(m.team1?.name||m.team1||"");
+        const away=normName(m.team2?.name||m.team2||"");
+        const hg=m.score1??null, ag=m.score2??null;
+        const date=m.date||"TBD";
+        if(hg!==null) r.push({group:g,home,away,hg,ag,date,status:"FT"});
+        else u.push({group:g,home,away,hg:null,ag:null,date,status:"scheduled"});
+      });
+    });
+    if(!r.length) return false;
+    ST.results=mergeWithFallback(r,FALLBACK_RESULTS);
+    if(u.length) ST.upcoming=u; else ST.upcoming=FALLBACK_UPCOMING;
+    ST.live=[]; ST.source="openfootball";
+    return true;
+  }catch(e){ return false; }
+}
+
+// Merge API results with fallback — fallback wins for any match not in API response
+// This prevents results going missing when an API has incomplete data
+function mergeWithFallback(apiResults, fallback){
+  if(!apiResults.length) return fallback;
+  const apiKeys=new Set(apiResults.map(r=>`${r.home}|${r.away}`));
+  const missing=fallback.filter(r=>!apiKeys.has(`${r.home}|${r.away}`));
+  return [...apiResults,...missing];
+}
+
 function useFallback(){
-  setStatus("warn",`Static data (verified Jun 18) · API unavailable · ${new Date().toLocaleTimeString()}`);
-  ELO=buildElo(FALLBACK_RESULTS, BASE_ELO);
+  ST.results=FALLBACK_RESULTS;
+  ST.upcoming=FALLBACK_UPCOMING;
+  ST.live=[];
+  ST.source="static";
+  setStatus("warn",`Static data (verified FIFA.com Jun 19) · All APIs unreachable · ${new Date().toLocaleTimeString()}`);
+  ELO=buildElo(FALLBACK_RESULTS,BASE_ELO);
   renderAll();
 }
 
