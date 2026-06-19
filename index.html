@@ -358,7 +358,7 @@ td.gd-zero{color:var(--muted);text-align:center}
     <div class="ai-box">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <div class="section-label" style="margin-bottom:0">⚡ AI Analyst — Model Insights</div>
-        <button class="btn-gold" onclick="runAI()">Run Analysis</button>
+        <button class="btn-gold" id="ai-run-btn" onclick="runAI()">Run Analysis</button>
       </div>
       <div id="ai-result" class="ai-placeholder">Click to get AI insight on model uncertainty, blind spots, and high-confidence picks based on current ELO and history.</div>
     </div>
@@ -743,32 +743,35 @@ function parseESPN(d){
   try{
     const events=d.events||[];
     if(!events.length) return false;
-    const r=[],u=[],l=[];
+    const r=[],l=[];
+    // ESPN scoreboard only returns today's matches — NEVER overwrite full upcoming schedule
     events.forEach(ev=>{
       const comp=ev.competitions?.[0]; if(!comp) return;
       const home=normName(comp.competitors?.find(c=>c.homeAway==="home")?.team?.displayName||"");
       const away=normName(comp.competitors?.find(c=>c.homeAway==="away")?.team?.displayName||"");
       if(!home||!away) return;
-      const hg=parseInt(comp.competitors?.find(c=>c.homeAway==="home")?.score)||null;
-      const ag=parseInt(comp.competitors?.find(c=>c.homeAway==="away")?.score)||null;
+      const hgRaw=comp.competitors?.find(c=>c.homeAway==="home")?.score;
+      const agRaw=comp.competitors?.find(c=>c.homeAway==="away")?.score;
+      const hg=(hgRaw!==undefined&&hgRaw!==null&&hgRaw!=="")?parseInt(hgRaw):null;
+      const ag=(agRaw!==undefined&&agRaw!==null&&agRaw!=="")?parseInt(agRaw):null;
       const status=ev.status?.type?.name||"";
       const clock=ev.status?.displayClock||"";
       const date=new Date(ev.date).toLocaleDateString("en-US",{month:"short",day:"numeric"});
       const venue=comp.venue?.fullName||"";
-      // Find group from notes
       const note=comp.notes?.[0]?.headline||"";
       const gMatch=note.match(/Group\s+([A-L])/i);
       const group=gMatch?gMatch[1].toUpperCase():"?";
-      const o={group,home,away,hg:isNaN(hg)?null:hg,ag:isNaN(ag)?null:ag,date,status,venue};
-      if(status==="STATUS_FINAL"||status==="STATUS_FULL_TIME") r.push(o);
-      else if(status==="STATUS_IN_PROGRESS"){o.minute=clock;l.push(o);}
-      else u.push(o);
+      const o={group,home,away,hg:(!hg&&hg!==0)?null:hg,ag:(!ag&&ag!==0)?null:ag,date,status,venue};
+      if(["STATUS_FINAL","STATUS_FULL_TIME","STATUS_END_PERIOD"].includes(status)) r.push(o);
+      else if(["STATUS_IN_PROGRESS","STATUS_FIRST_HALF","STATUS_HALF_TIME","STATUS_SECOND_HALF"].includes(status)){
+        o.minute=clock; l.push(o);
+      }
+      // Ignore ESPN upcoming — it only sees today, not the full schedule
     });
-    // Only replace if we got meaningful data; always merge with fallback to ensure nothing missing
-    const mergedResults = mergeWithFallback(r, FALLBACK_RESULTS);
-    ST.results=mergedResults;
-    if(u.length) ST.upcoming=u; else ST.upcoming=FALLBACK_UPCOMING;
-    ST.live=l; ST.source="espn";
+    ST.results=mergeWithFallback(r,FALLBACK_RESULTS);
+    ST.upcoming=FALLBACK_UPCOMING; // Always use verified full schedule
+    ST.live=l;
+    ST.source="espn";
     return true;
   }catch(e){ return false; }
 }
@@ -956,9 +959,9 @@ function predCardHTML(m){
     <div class="factors">${p.factors.map(x=>`· ${x}`).join("<br>")}</div>
     <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--gold2);text-transform:uppercase;margin:12px 0 6px">Your Pick</div>
     <div class="pick-row">
-      <button class="pick-btn" style="${pickBtnStyle("home","var(--green)")}" onclick="setPick('${key}','home','${m.home}','${m.away}','${m.group}','${m.date}')">${F(m.home)} ${m.home}</button>
-      <button class="pick-btn" style="${pickBtnStyle("draw","var(--gold)")}" onclick="setPick('${key}','draw','${m.home}','${m.away}','${m.group}','${m.date}')">🤝 Draw</button>
-      <button class="pick-btn" style="${pickBtnStyle("away","var(--red)")}" onclick="setPick('${key}','away','${m.home}','${m.away}','${m.group}','${m.date}')">${m.away} ${F(m.away)}</button>
+      <button class="pick-btn" style="${pickBtnStyle("home","var(--green)")}" data-key="${key}" data-pick="home" onclick="handlePick(this)">${F(m.home)} ${m.home}</button>
+      <button class="pick-btn" style="${pickBtnStyle("draw","var(--gold)")}" data-key="${key}" data-pick="draw" onclick="handlePick(this)">🤝 Draw</button>
+      <button class="pick-btn" style="${pickBtnStyle("away","var(--red)")}" data-key="${key}" data-pick="away" onclick="handlePick(this)">${m.away} ${F(m.away)}</button>
     </div>
     ${userPick?`<div class="pick-saved">✅ Pick: <strong style="color:${userPick==="home"?"var(--green)":userPick==="away"?"var(--red)":"var(--gold)"}">${userPick==="home"?m.home:userPick==="away"?m.away:"Draw"}</strong>${userPick===mc?' · <span style="color:var(--green)">Agrees with model</span>':' · <span style="color:var(--orange)">Disagrees with model</span>'}</div>`:""}
   </div>`;
@@ -997,7 +1000,9 @@ function updateHeader(){
 }
 
 function renderOverview(){
-  const today=new Date().toLocaleDateString("en-US",{month:"short",day:"numeric"});
+  // Robust date: always "Jun 19" format regardless of browser locale
+  const _nd=new Date(),_mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const today=_mo[_nd.getMonth()]+" "+_nd.getDate();
   const todayM=[...ST.live,...ST.results.filter(r=>r.date===today)];
   document.getElementById("ov-today").innerHTML=todayM.length>0
     ?todayM.map(r=>matchCardHTML(r,true)).join("")
@@ -1015,13 +1020,12 @@ function renderLive(){
 
 function renderGroups(){
   const picker=document.getElementById("grp-picker");
-  if(!picker.children.length){
-    picker.innerHTML=Object.keys(GROUPS_META).map(g=>`
-      <button id="gb-${g}" onclick="selectGroup('${g}')"
-        style="padding:5px 12px;font-size:13px;font-weight:600;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:${g===selGrp?"var(--gold)":"transparent"};color:${g===selGrp?"#000":"var(--muted)"}">
-        Group ${g}
-      </button>`).join("");
-  }
+  // Always rebuild picker so active state stays in sync
+  picker.innerHTML=Object.keys(GROUPS_META).map(g=>`
+    <button id="gb-${g}" onclick="selectGroup('${g}')"
+      style="padding:5px 12px;font-size:13px;font-weight:600;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:${g===selGrp?"var(--gold)":"transparent"};color:${g===selGrp?"#000":"var(--muted)"}">
+      Group ${g}
+    </button>`).join("");
   renderGroupDetail();
 }
 function selectGroup(g){
@@ -1074,7 +1078,14 @@ function renderBracket(){
 }
 
 function renderPredict(){
-  document.getElementById("pred-list").innerHTML=ST.upcoming.map(m=>predCardHTML(m)).join("");
+  // Only predict group stage & known team matches, not R32 TBD slots
+  const preditable=ST.upcoming.filter(m=>
+    m.group!=="R32"&&!m.home.includes("1st")&&!m.home.includes("2nd")&&
+    !m.home.includes("3rd")&&!m.home.includes("Winner")&&!m.home.includes("Group")
+  );
+  document.getElementById("pred-list").innerHTML=preditable.length>0
+    ?preditable.map(m=>predCardHTML(m)).join("")
+    :`<div style="color:var(--muted);font-size:13px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">No upcoming group stage matches to predict right now.</div>`;
 }
 
 function renderAccuracy(){
@@ -1132,7 +1143,7 @@ function renderElo(){
 
 function renderGrade(){
   const graded=new Set(HIST.map(h=>`${h.home}vs${h.away}`));
-  const toGrade=ST.upcoming.filter(m=>!graded.has(`${m.home}vs${m.away}`));
+  const toGrade=ST.upcoming.filter(m=>!graded.has(`${m.home}vs${m.away}`)&&m.group!=="R32"&&!m.home.includes("1st")&&!m.home.includes("2nd")&&!m.home.includes("Group"));
   document.getElementById("grade-list").innerHTML=toGrade.map(m=>{
     const key=`${m.home}vs${m.away}`;
     const p=predictMatch(m.home,m.away,ST.results,ELO,BIAS);
@@ -1160,7 +1171,7 @@ function renderGrade(){
         <span style="color:var(--muted);font-size:16px;font-weight:700">–</span>
         <input class="score-input" type="number" min="0" max="20" placeholder="0" id="as-${key}" oninput="this.style.borderColor='var(--gold)'"/>
         <span style="font-size:13px;font-weight:600;color:#aabbcc;min-width:100px">${m.away}</span>
-        <button class="btn-gold" onclick="submitGrade('${key}','${m.home}','${m.away}','${m.group}','${m.date}')" style="margin-left:auto">Submit & Learn</button>
+        <button class="btn-gold" data-key="${key}" onclick="handleGrade(this)" style="margin-left:auto">Submit & Learn</button>
       </div>
       <div id="gf-${key}"></div>
     </div>`;
@@ -1170,6 +1181,22 @@ function renderGrade(){
 // ─────────────────────────────────────────────────────────────
 // PREDICTOR ACTIONS
 // ─────────────────────────────────────────────────────────────
+// Safe handlers that read data from DOM attributes — avoids apostrophe bugs in onclick strings
+function handlePick(btn){
+  const key=btn.dataset.key;
+  const pick=btn.dataset.pick;
+  // Find the match from upcoming by key
+  const match=ST.upcoming.find(m=>`${m.home}vs${m.away}`===key)||
+               [...ST.results,...ST.live].find(m=>`${m.home}vs${m.away}`===key);
+  if(!match) return;
+  setPick(key,pick,match.home,match.away,match.group,match.date);
+}
+function handleGrade(btn){
+  const key=btn.dataset.key;
+  const match=ST.upcoming.find(m=>`${m.home}vs${m.away}`===key);
+  if(!match) return;
+  submitGrade(key,match.home,match.away,match.group,match.date);
+}
 function setPick(key,pick,home,away,group,date){
   PICKS[key]=pick;
   saveLS("wc26_picks",PICKS);
@@ -1237,7 +1264,7 @@ function submitGrade(key,home,away,group,date){
 // AI ANALYST
 // ─────────────────────────────────────────────────────────────
 async function runAI(){
-  const btn=document.querySelector('#page-predict .btn-gold');
+  const btn=document.getElementById("ai-run-btn");
   const out=document.getElementById("ai-result");
   if(btn){btn.disabled=true;btn.innerHTML='Analyzing<span class="spinner"></span>';}
   out.textContent="";
