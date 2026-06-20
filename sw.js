@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wc26-tracker-v1';
+const CACHE_NAME = 'wc26-tracker-v2';
 const ASSETS_TO_CACHE = [
   'index.html',
   'style.css',

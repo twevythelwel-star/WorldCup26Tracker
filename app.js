@@ -608,7 +608,7 @@ function matchCardHTML(r, showPred = false) {
           LIVE · ${half}${min ? " · " + min + "'" : ""}
         </span>
         <span class="badge badge-group">Grp ${r.group}</span>
-        ${r.venue ? `<span style="font-size:10px;color:var(--muted)">📍${r.venue}</span>` : ""}
+        ${r.venue ? `<span style="font-size:10px;color:var(--muted);display:inline-flex;align-items:center"><i data-lucide="map-pin" class="icon-inline"></i>${r.venue}</span>` : ""}
       </div>
       <div class="match-teams">
         <div class="team">
@@ -636,14 +636,14 @@ function matchCardHTML(r, showPred = false) {
     <div class="pred-mini">${F(r.home)} ${hw}% · Draw ${dr}% · ${aw}% ${F(r.away)}</div>`;
     }
     const badge = isFT ? `<span class="badge badge-ft">FT</span>`
-        : `<span class="badge badge-upcoming">📅 ${r.date}${r.time ? " · " + r.time : ""}</span>`;
+        : `<span class="badge badge-upcoming" style="display:inline-flex;align-items:center"><i data-lucide="calendar" class="icon-inline"></i>${r.date}${r.time ? " · " + r.time : ""}</span>`;
     return `<div class="match-card${hasPred ? " has-pred" : ""}">
     <div class="match-teams">
       <div class="team"><span class="team-flag">${F(r.home)}</span><span class="team-name">${r.home}</span></div>
       <div class="score-box">${r.hg != null ? `<div class="score">${r.hg}&nbsp;–&nbsp;${r.ag}</div>` : '<div class="score-vs">vs</div>'}</div>
       <div class="team away"><span class="team-flag">${F(r.away)}</span><span class="team-name">${r.away}</span></div>
     </div>
-    <div class="match-meta"><span class="badge badge-group">Grp ${r.group}</span>${badge}${r.venue ? `<span style="font-size:10px;color:var(--muted)">📍${r.venue}</span>` : ""}</div>
+    <div class="match-meta"><span class="badge badge-group">Grp ${r.group}</span>${badge}${r.venue ? `<span style="font-size:10px;color:var(--muted);display:inline-flex;align-items:center"><i data-lucide="map-pin" class="icon-inline"></i>${r.venue}</span>` : ""}</div>
     ${predStrip}
   </div>`;
 }
@@ -714,10 +714,10 @@ function predCardHTML(m) {
     <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--gold2);text-transform:uppercase;margin:12px 0 6px">Your Pick</div>
     <div class="pick-row">
       <button class="pick-btn" style="${pickBtnStyle("home", "var(--green)")}" data-key="${key}" data-pick="home" onclick="handlePick(this)">${F(m.home)} ${m.home}</button>
-      <button class="pick-btn" style="${pickBtnStyle("draw", "var(--gold)")}" data-key="${key}" data-pick="draw" onclick="handlePick(this)">🤝 Draw</button>
+      <button class="pick-btn" style="${pickBtnStyle("draw", "var(--gold)")}" data-key="${key}" data-pick="draw" onclick="handlePick(this)"><i data-lucide="handshake" class="icon-inline"></i>Draw</button>
       <button class="pick-btn" style="${pickBtnStyle("away", "var(--red)")}" data-key="${key}" data-pick="away" onclick="handlePick(this)">${m.away} ${F(m.away)}</button>
     </div>
-    ${userPick ? `<div class="pick-saved">✅ Pick: <strong style="color:${userPick === "home" ? "var(--green)" : userPick === "away" ? "var(--red)" : "var(--gold)"}">${userPick === "home" ? m.home : userPick === "away" ? m.away : "Draw"}</strong>${userPick === mc ? ' · <span style="color:var(--green)">Agrees with model</span>' : ' · <span style="color:var(--orange)">Disagrees with model</span>'}</div>` : ""}
+    ${userPick ? `<div class="pick-saved"><i data-lucide="check-circle" class="icon-inline" style="color:var(--green)"></i>Pick: <strong style="color:${userPick === "home" ? "var(--green)" : userPick === "away" ? "var(--red)" : "var(--gold)"}">${userPick === "home" ? m.home : userPick === "away" ? m.away : "Draw"}</strong>${userPick === mc ? ' · <span style="color:var(--green)">Agrees with model</span>' : ' · <span style="color:var(--orange)">Disagrees with model</span>'}</div>` : ""}
   </div>`;
 }
 
@@ -743,6 +743,7 @@ function renderAll() {
     }
     checkNotifications();
     document.getElementById("loading-screen").classList.add("hidden");
+    if (window.lucide) lucide.createIcons();
 }
 
 function updateHeader() {
@@ -852,8 +853,8 @@ function renderUpcoming() {
       <span style="font-size:18px">${F(r.home)}</span>
       <span style="font-size:13px;font-weight:600;flex:1;color:#c8d8f0">${r.home} <span style="color:var(--muted);font-weight:400">vs</span> ${r.away}</span>
       <span style="font-size:18px">${F(r.away)}</span>
-      <span style="font-size:11px;color:var(--muted)">${r.date}${r.time ? " · " + r.time : ""}</span>
-      ${r.venue ? `<span style="font-size:11px;color:#334466">📍${r.venue}</span>` : ""}
+      <span style="font-size:11px;color:var(--muted);display:inline-flex;align-items:center"><i data-lucide="calendar" class="icon-inline"></i>${r.date}${r.time ? " · " + r.time : ""}</span>
+      ${r.venue ? `<span style="font-size:11px;color:#334466;display:inline-flex;align-items:center"><i data-lucide="map-pin" class="icon-inline"></i>${r.venue}</span>` : ""}
     </div>`).join("");
 }
 
@@ -873,8 +874,10 @@ function renderBracket() {
       <div class="bracket-slot ${s1.known ? "known" : ""}">${s1.name}</div>
       <div class="bracket-vs">vs</div>
       <div class="bracket-slot ${s2.known ? "known" : ""}">${s2.name}</div>
-      <div style="font-size:9px;color:${s1.known && s2.known ? "var(--green)" : "var(--muted)"};margin-top:5px">
-        ${s1.known && s2.known ? "✅ Teams confirmed" : "🔒 TBD after group stage"}
+      <div style="font-size:9px;color:${s1.known && s2.known ? "var(--green)" : "var(--muted)"};margin-top:5px;display:flex;align-items:center;gap:4px">
+        ${s1.known && s2.known 
+            ? '<i data-lucide="check-circle" class="icon-inline"></i>Teams confirmed' 
+            : '<i data-lucide="lock" class="icon-inline"></i>TBD after group stage'}
       </div>
     </div>`;
     }).join("");
@@ -888,7 +891,7 @@ function renderBracket() {
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:10px">
       ${[{ r: "Round of 16", d: "Jul 4–7" }, { r: "Quarter-Finals", d: "Jul 9–11" }, { r: "Semi-Finals", d: "Jul 14–15" }, { r: "3rd Place", d: "Jul 18 · Miami" }, { r: "🏆 FINAL", d: "Jul 19 · MetLife Stadium NJ" }]
-            .map(s => `<div class="knockout-card"><div style="font-size:10px;font-weight:700;color:var(--gold2);margin-bottom:3px">${s.r}</div><div style="font-size:11px;color:var(--muted)">${s.d}</div><div style="font-size:11px;color:#334466;margin-top:5px">TBD</div></div>`).join("")}
+            .map(s => `<div class="knockout-card"><div style="font-size:10px;font-weight:700;color:var(--gold2);margin-bottom:3px">${s.r.includes("FINAL") ? '<i data-lucide="trophy" class="icon-inline"></i>' : ''}${s.r}</div><div style="font-size:11px;color:var(--muted)">${s.d}</div><div style="font-size:11px;color:#334466;margin-top:5px">TBD</div></div>`).join("")}
     </div>`;
 }
 
@@ -981,7 +984,7 @@ function renderAccuracy() {
     document.getElementById("pred-history").innerHTML = HIST.length > 0
         ? HIST.slice(0, 30).map(h => `
       <div class="hist-row">
-        <span class="${h.correct ? "tag-correct" : "tag-wrong"}">${h.correct ? "✓" : "✗"}</span>
+        <span class="${h.correct ? "tag-correct" : "tag-wrong"}">${h.correct ? '<i data-lucide="check" class="icon-inline"></i>' : '<i data-lucide="x" class="icon-inline"></i>'}</span>
         <span style="font-size:12px;font-weight:600;flex:1">${F(h.home)} ${h.home} vs ${h.away} ${F(h.away)}</span>
         <span style="font-size:11px;color:var(--muted)">Pred: <strong style="color:${h.pred === "home" ? "var(--green)" : h.pred === "away" ? "var(--red)" : "var(--gold)"}">${h.pred === "home" ? h.home : h.pred === "away" ? h.away : "Draw"}</strong></span>
         <span style="font-size:11px;color:var(--dim)">→ <strong>${h.actual === "home" ? h.home : h.actual === "away" ? h.away : "Draw"}</strong></span>
@@ -1100,7 +1103,7 @@ function renderGrade() {
         <span style="color:var(--muted);font-size:16px;font-weight:700">–</span>
         <input class="score-input" type="number" min="0" max="20" placeholder="0" id="as-${key}" oninput="this.style.borderColor='var(--gold)'"/>
         <span style="font-size:13px;font-weight:600;color:#aabbcc;min-width:100px">${m.away}</span>
-        <button class="btn-gold" data-key="${key}" onclick="handleGrade(this)" style="margin-left:auto">Submit & Learn</button>
+        <button class="btn-gold" data-key="${key}" onclick="handleGrade(this)" style="margin-left:auto;display:inline-flex;align-items:center"><i data-lucide="brain" class="icon-inline"></i>Submit & Learn</button>
       </div>
       <div id="gf-${key}"></div>
     </div>`;
@@ -1164,8 +1167,8 @@ function submitGrade(key, home, away, group, date) {
     if (fb) {
         fb.className = `grade-feedback ${correct ? "correct" : "wrong"}`;
         fb.innerHTML = correct
-            ? `✓ Correct! Model reinforced. ELO: ${home} → ${nh} · ${away} → ${na}`
-            : `✗ Wrong (predicted ${pred === "home" ? home : pred === "away" ? away : "Draw"}, was ${actual === "home" ? home : actual === "away" ? away : "Draw"}). Bias corrected. ELO: ${home} → ${nh} · ${away} → ${na}`;
+            ? `<i data-lucide="check" class="icon-inline"></i>Correct! Model reinforced. ELO: ${home} → ${nh} · ${away} → ${na}`
+            : `<i data-lucide="alert-circle" class="icon-inline"></i>Wrong (predicted ${pred === "home" ? home : pred === "away" ? away : "Draw"}, was ${actual === "home" ? home : actual === "away" ? away : "Draw"}). Bias corrected. ELO: ${home} → ${nh} · ${away} → ${na}`;
     }
 
     updateHeader();
@@ -1315,6 +1318,7 @@ function showTab(id, btn) {
     if (id === "grade") renderGrade();
     if (id === "scorers") renderScorers();
     if (id === "teams") renderTeams();
+    if (window.lucide) lucide.createIcons();
 }
 function setStatus(type, msg) {
     const d = document.getElementById("sdot");
@@ -1360,8 +1364,11 @@ function toggleNotifications() {
 function updateNotifBtn() {
     const btn = document.getElementById("notif-btn");
     if (!btn) return;
-    btn.textContent = NOTIF_ENABLED ? "🔔 On" : "🔔 Alerts";
+    btn.innerHTML = NOTIF_ENABLED 
+        ? `<i data-lucide="bell" class="icon-inline"></i>On` 
+        : `<i data-lucide="bell-off" class="icon-inline"></i>Alerts`;
     btn.className = NOTIF_ENABLED ? "notif-btn enabled" : "notif-btn";
+    if (window.lucide) lucide.createIcons();
 }
 function checkNotifications() {
     if (!NOTIF_ENABLED || Notification.permission !== "granted") return;
@@ -1409,14 +1416,17 @@ document.addEventListener("keydown", e => {
 let DARK_MODE = loadLS("wc26_dark", true);
 function applyTheme() {
     if (!DARK_MODE) {
-        document.documentElement.style.setProperty("--bg", "#f0f2f8");
-        document.documentElement.style.setProperty("--bg2", "#ffffff");
-        document.documentElement.style.setProperty("--bg3", "#e8eaf2");
-        document.documentElement.style.setProperty("--border", "#d0d4e8");
-        document.documentElement.style.setProperty("--border2", "#b0b8d8");
-        document.documentElement.style.setProperty("--text", "#1a1e30");
-        document.documentElement.style.setProperty("--muted", "#6070a0");
-        document.documentElement.style.setProperty("--dim", "#4a5888");
+        /* Light Mode (Team Red + Gold) */
+        document.documentElement.style.setProperty("--bg", "#FEF2F2");
+        document.documentElement.style.setProperty("--bg2", "#FFFFFF");
+        document.documentElement.style.setProperty("--bg3", "#FEE2E2");
+        document.documentElement.style.setProperty("--border", "#FECACA");
+        document.documentElement.style.setProperty("--border2", "#FCA5A5");
+        document.documentElement.style.setProperty("--text", "#7F1D1D");
+        document.documentElement.style.setProperty("--muted", "#DC2626");
+        document.documentElement.style.setProperty("--dim", "#EF4444");
+        document.documentElement.style.setProperty("--gold", "#D97706");
+        document.documentElement.style.setProperty("--gold2", "#B45309");
     } else {
         document.documentElement.style.removeProperty("--bg");
         document.documentElement.style.removeProperty("--bg2");
@@ -1426,14 +1436,17 @@ function applyTheme() {
         document.documentElement.style.removeProperty("--text");
         document.documentElement.style.removeProperty("--muted");
         document.documentElement.style.removeProperty("--dim");
+        document.documentElement.style.removeProperty("--gold");
+        document.documentElement.style.removeProperty("--gold2");
     }
 }
 function toggleTheme() {
     DARK_MODE = !DARK_MODE;
     saveLS("wc26_dark", DARK_MODE);
     const btn = document.getElementById("theme-btn");
-    if (btn) btn.textContent = DARK_MODE ? "☀️ Light" : "🌙 Dark";
+    if (btn) btn.innerHTML = DARK_MODE ? `<i data-lucide="sun" class="icon-inline"></i>Light` : `<i data-lucide="moon" class="icon-inline"></i>Dark`;
     applyTheme();
+    if (window.lucide) lucide.createIcons();
 }
 
 // ── SHARE MY PICKS ───────────────────────────────────────────
@@ -1788,9 +1801,9 @@ window.addEventListener("DOMContentLoaded", () => {
         extra.style.cssText = "display:flex;gap:6px;align-items:center;margin-top:4px";
         extra.innerHTML = `
       <button id="theme-btn" class="notif-btn" onclick="toggleTheme()" style="font-size:11px">
-        ${DARK_MODE ? "☀️ Light" : "🌙 Dark"}
+        ${DARK_MODE ? '<i data-lucide="sun" class="icon-inline"></i>Light' : '<i data-lucide="moon" class="icon-inline"></i>Dark'}
       </button>
-      <button class="notif-btn" onclick="sharepicks()" style="font-size:11px">📤 Share Picks</button>
+      <button class="notif-btn" onclick="sharepicks()" style="font-size:11px"><i data-lucide="share-2" class="icon-inline"></i>Share Picks</button>
       <span style="font-size:9px;color:var(--muted)">Shortcuts: 1-9 tabs · R refresh</span>`;
         headerRight.appendChild(extra);
     }

@@ -17,6 +17,7 @@
     <meta name="theme-color" content="#07090f" />
     <link rel="apple-touch-icon" href="icon-192.png" />
     <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="app.js" defer></script>
 </head>
 
@@ -43,8 +44,8 @@
                         id="live-badge-text">GROUP STAGE ACTIVE</span></div>
                 <div class="refresh-info">
                     Auto-refresh in <span id="countdown">30</span>s &nbsp;·&nbsp;
-                    <span class="refresh-link" onclick="manualRefresh()">↻ Now</span> &nbsp;·&nbsp;
-                    <button class="notif-btn" id="notif-btn" onclick="toggleNotifications()">🔔 Alerts</button>
+                    <span class="refresh-link" onclick="manualRefresh()"><i data-lucide="refresh-cw" class="icon-inline"></i>Now</span> &nbsp;·&nbsp;
+                    <button class="notif-btn" id="notif-btn" onclick="toggleNotifications()"><i data-lucide="bell" class="icon-inline"></i>Alerts</button>
                 </div>
             </div>
         </div>
@@ -83,30 +84,30 @@
     <!-- NAV -->
     <nav>
         <div class="nav-section">
-            <button class="tab active" onclick="showTab('overview',this)">📊 Overview<span
+            <button class="tab active" onclick="showTab('overview',this)"><i data-lucide="layout-dashboard"></i>Overview<span
                     class="tab-label-sm">Dashboard</span></button>
-            <button class="tab" onclick="showTab('live',this)">🔴 Live<span class="tab-label-sm">Scores</span></button>
-            <button class="tab" onclick="showTab('groups',this)">🗂 Groups<span
+            <button class="tab" onclick="showTab('live',this)"><i data-lucide="activity"></i>Live<span class="tab-label-sm">Scores</span></button>
+            <button class="tab" onclick="showTab('groups',this)"><i data-lucide="grid"></i>Groups<span
                     class="tab-label-sm">Standings</span></button>
-            <button class="tab" onclick="showTab('results',this)">⚽ Results<span
+            <button class="tab" onclick="showTab('results',this)"><i data-lucide="check-square"></i>Results<span
                     class="tab-label-sm">Completed</span></button>
-            <button class="tab" onclick="showTab('upcoming',this)">📅 Fixtures<span
+            <button class="tab" onclick="showTab('upcoming',this)"><i data-lucide="calendar"></i>Fixtures<span
                     class="tab-label-sm">Schedule</span></button>
-            <button class="tab" onclick="showTab('bracket',this)">🏆 Bracket<span
+            <button class="tab" onclick="showTab('bracket',this)"><i data-lucide="git-branch"></i>Bracket<span
                     class="tab-label-sm">Knockout</span></button>
-            <button class="tab" onclick="showTab('teams',this)">👥 Teams<span
+            <button class="tab" onclick="showTab('teams',this)"><i data-lucide="users"></i>Teams<span
                     class="tab-label-sm">Statuses</span></button>
         </div>
         <div class="nav-divider"></div>
         <div class="nav-section">
-            <button class="tab" onclick="showTab('predict',this)" style="color:var(--purple)">🎯 Predict<span
+            <button class="tab" onclick="showTab('predict',this)" style="color:var(--purple)"><i data-lucide="sparkles"></i>Predict<span
                     class="tab-label-sm">AI Engine</span></button>
-            <button class="tab" onclick="showTab('accuracy',this)">📈 Accuracy<span
+            <button class="tab" onclick="showTab('accuracy',this)"><i data-lucide="trending-up"></i>Accuracy<span
                     class="tab-label-sm">Learning</span></button>
-            <button class="tab" onclick="showTab('elo',this)">⚡ ELO<span class="tab-label-sm">Rankings</span></button>
-            <button class="tab" onclick="showTab('scorers',this)">🥇 Scorers<span class="tab-label-sm">Golden
+            <button class="tab" onclick="showTab('elo',this)"><i data-lucide="zap"></i>ELO<span class="tab-label-sm">Rankings</span></button>
+            <button class="tab" onclick="showTab('scorers',this)"><i data-lucide="medal"></i>Scorers<span class="tab-label-sm">Golden
                     Boot</span></button>
-            <button class="tab" onclick="showTab('grade',this)">✅ Grade<span class="tab-label-sm">Train
+            <button class="tab" onclick="showTab('grade',this)"><i data-lucide="sliders"></i>Grade<span class="tab-label-sm">Train
                     Model</span></button>
         </div>
     </nav>

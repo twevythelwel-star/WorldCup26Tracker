@@ -1,22 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap');
+
 /* ═══════════════════════════════════════════════
-   DESIGN TOKENS
-═══════════════════════════════════════════════ */
+   DESIGN TOKENS — Vibrant & Block-based
+   (Team red + championship gold)
+   ═══════════════════════════════════════════════ */
 :root {
-    --bg: #07090f;
-    --bg2: #0c1018;
-    --bg3: #101520;
-    --border: #1c2540;
-    --border2: #253060;
-    --gold: #e8c84a;
-    --gold2: #c8a83a;
-    --text: #dde8f8;
-    --muted: #5a6888;
-    --dim: #8898bb;
+    /* Dark Mode (Default) */
+    --bg: #140505;
+    --bg2: #1e0b0b;
+    --bg3: #2a1111;
+    --border: #441616;
+    --border2: #6e1c1c;
+    --gold: #fbbf24;
+    --gold2: #f59e0b;
+    --text: #fef2f2;
+    --muted: #fca5a5;
+    --dim: #f87171;
     --green: #34d45e;
-    --red: #ff4444;
-    --blue: #4488ff;
-    --purple: #9966ff;
-    --orange: #ff8833;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --orange: #f97316;
 }
 
 * {
@@ -26,11 +30,43 @@
 }
 
 body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Fira Sans', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden
+}
+
+h1, h2, h3, h4, h5, h6, 
+.header-title, 
+.section-label, 
+.group-title, 
+.stat-label, 
+.scorer-rank, 
+.scorer-goals, 
+.stat-card-val, 
+.metric-val, 
+.score, 
+.pred-score-display, 
+.bracket-id {
+    font-family: 'Fira Code', monospace;
+}
+
+.tab svg, .tab i {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.2px;
+    margin-bottom: 2px;
+}
+
+.icon-inline {
+    display: inline-block;
+    vertical-align: middle;
+    width: 13px;
+    height: 13px;
+    stroke-width: 2.2px;
+    margin-right: 4px;
+    margin-top: -2px;
 }
 
 ::-webkit-scrollbar {
