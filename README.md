@@ -1,125 +1,75 @@
-# ⚽ FIFA World Cup 2026 — Live Tracker + Adaptive Predictor
+# ⚽ FIFA World Cup 2026 — Live Tracker & Predictor
 
-A fully self-contained, single-file web app combining:
-- **Live scores** — auto-refreshes every 60 seconds, tries free APIs first, falls back to verified static data
-- **Real-time standings** — all 12 groups, correct qualification logic
-- **Knockout bracket** — full Round of 32 pathway
-- **Adaptive predictor** — ELO model that learns after every result you grade
-- **Persistent learning** — prediction history and model weights saved to localStorage, survive browser restarts
+A modern, highly optimized, and responsive Progressive Web App (PWA) designed to track matches, standings, and tournament statistics in real-time, combined with an adaptive ELO match predictor.
 
-## 🚀 Live at GitHub Pages
+Hosted natively on GitHub Pages with automated CI/CD deployments.
 
-Once deployed, your site is at:
-```
-https://YOUR-USERNAME.github.io/wc2026-tracker/
+---
+
+## 🚀 Key Features
+
+* **Real-Time Scoring & Auto-Refresh:** Score updates are fetched automatically every 30 seconds from multiple live API endpoints (ESPN, worldcup2026api, OpenFootball) with automatic fallback to verified static data if all APIs are down.
+* **Chronological ELO Simulation Engine:** Matches are simulated chronologically using a 3-layer model:
+  1. **Baseline ELO Ratings:** Seeded from FIFA historical ratings (November 2025).
+  2. **Recent Team Form:** Calculated dynamically over the last three matches, with newer results weighted more heavily.
+  3. **Bayesian Matchup Bias:** Auto-corrects systematically if the model predicts a result incorrectly, refining predictions for future match combinations.
+* **Offline PWA Capabilities:** Service Worker caching stores all core application shells (`index.html`, `style.css`, `app.js`, manifest, and fonts) for immediate load times and offline accessibility (with a standalone app launch experience).
+* **Local Offline AI Analyst:** Evaluates model predictions dynamically to surface:
+  * **Highest-Uncertainty Matches:** Closest ELO pairings and draw probability.
+  * **Systematic Blind Spots:** Pattern detection on model misses (e.g. underrating defensive draw strategies vs. overvaluing historic ratings).
+  * **Highest-Confidence Picks:** Statistical probability leaders based on ELO gap and form edge.
+* **Interactive Predictions & Custom Training:** Users can log their personal picks, submit custom scores (training the ELO engine with real-world outcomes), and see the model adapt (increasing its version and saving ELO updates to `localStorage`).
+* **Instant Sharing & Syncing:** Users can generate shares of their prediction sheets with click-to-copy/web share APIs.
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+This project is built as a zero-dependency, pure-client application:
+* **HTML5:** Semantic markup structured for maximum readability and accessibility.
+* **Vanilla CSS3:** Curated HSL color palette, dark/light modes, premium glassmorphism card designs, subtle hover animations, and fully responsive layouts.
+* **Vanilla JavaScript (ES6+):** Pure functional state management, client-side simulation, storage caching, and API integration.
+* **Service Workers & Web Manifests:** Powering the installable Progressive Web App (PWA).
+* **GitHub Actions:** CI/CD workflow deploying to GitHub Pages on every push to the `main` branch.
+
+---
+
+## 📁 File Structure
+
+```text
+├── .github/
+│   └── workflows/
+│       └── deploy.yml     # Automated GitHub Pages CI/CD workflow
+├── app.js                 # Core logic: simulation, state, and UI rendering
+├── index.html             # Clean markup and PWA service worker registration
+├── style.css              # Premium theme, typography, layout, and animations
+├── manifest.json          # Web App Manifest for mobile and desktop installability
+├── icon-192.png           # PWA Launcher icon (192x192)
+├── icon-512.png           # PWA Launcher icon (512x512)
+└── README.md              # Technical documentation
 ```
 
 ---
 
-## 📦 What's in the repo
+## ⚡ Deployment & Local Setup
 
-```
-wc2026-tracker/
-├── index.html          ← Entire app. Single file. Open it anywhere.
-└── README.md
-```
-
-No build step. No npm. No framework. Drop `index.html` anywhere and it works.
-
----
-
-## 🌐 Deploy to GitHub Pages (2 minutes)
-
-### Option A — GitHub Web UI (easiest)
-
-1. Go to **github.com → New repository**
-2. Name it `wc2026-tracker`
-3. Make it **Public**
-4. Click **Add file → Upload files**
-5. Drag in `index.html` and `README.md`
-6. Commit with message `"Initial deploy"`
-7. Go to **Settings → Pages**
-8. Under *Source*, select **main branch → / (root)**
-9. Click **Save**
-10. Your URL appears at the top: `https://YOUR-USERNAME.github.io/wc2026-tracker/`
-
-### Option B — Git CLI
+### Running Locally
+To test the tracker locally, you can open `index.html` directly in a browser or spin up a simple static file server:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/wc2026-tracker.git
-cd wc2026-tracker
-cp /path/to/index.html .
-git add .
-git commit -m "Deploy WC2026 tracker"
-git push origin main
+# Using Python
+python -m http.server 8000
+
+# Using Node.js (npx)
+npx serve .
 ```
 
-Then enable Pages in Settings → Pages → Source: main / root.
+*Note: Progressive Web App (PWA) installation and Service Worker caching require a secure context (`https://` or `localhost`).*
 
----
-
-## 🎯 Predictor — How the Model Works
-
-### 3-Layer Engine
-
-| Layer | Weight | Description |
-|-------|--------|-------------|
-| ELO Rating | 60% | Seeded from FIFA Nov 2025 rankings. Updates after every result you grade. K=32. |
-| Form | 25% | Last 3 results per team, newest weighted 40%, mid 35%, oldest 25%. |
-| Learned Bias | 15% | Per-matchup correction applied after wrong predictions. Accumulates over tournament. |
-
-### Learning Loop
-
-1. Open **🎯 Predict** — see probability bars and predicted score for every upcoming match
-2. Log your own pick with the buttons (saved instantly)  
-3. After the match finishes → go to **✅ Grade** → enter real score → click **Submit & Learn**
-4. The model: updates ELO for both teams, checks if it predicted correctly, applies Bayesian bias correction if wrong, increments model version
-5. All learning saved to `localStorage` — persists when you close the tab
-
-### What "learns" means specifically
-
-- **Correct prediction**: ELO updates normally. Any existing bias for that matchup shrinks by 30%.
-- **Wrong prediction**: ELO updates (bigger swing for the upset). A +8pt home/away bias is applied to that matchup for future predictions. Biases compound — get a matchup wrong twice and the correction doubles.
-
----
-
-## 🔄 Keeping scores current
-
-The app tries two live data sources on each refresh:
-1. `worldcup2026api.vercel.app` — community-maintained live API
-2. `openfootball/worldcup.json` — GitHub-hosted, updated daily
-
-If both fail, it uses the hardcoded verified data (accurate as of **Jun 18 2026**).
-
-**To update static fallback data:** Edit the `FALLBACK_RESULTS` and `FALLBACK_UPCOMING` arrays in `index.html`. Takes 2 minutes.
-
----
-
-## 📱 Features
-
-| Tab | What it shows |
-|-----|---------------|
-| 📊 Overview | Today's matches, recent results, all 12 standings |
-| 🔴 Live | Live matches (auto-highlighted), next 8 fixtures with mini prediction bars |
-| 🗂 Groups | Deep-dive per group: standings + all matches + predictions |
-| ⚽ Results | All completed matches, newest first |
-| 📅 Fixtures | Full upcoming schedule with times and venues |
-| 🏆 Bracket | Round of 32 pathway + later rounds |
-| 🎯 Predict | Full prediction cards with probability bars, your picks |
-| 📈 Accuracy | Model performance, prediction history, learned biases |
-| ⚡ ELO | Live ranking of all 48 teams with deltas |
-| ✅ Grade | Enter real scores to train the model |
-
----
-
-## ⚙️ Tech
-
-- Pure HTML + CSS + Vanilla JS — no dependencies, no build step
-- Google Fonts (Inter + JetBrains Mono) via CDN
-- `localStorage` for prediction persistence
-- Anthropic API for AI analyst (requires browser to reach `api.anthropic.com`)
-- Auto-refresh every 60 seconds with manual override
-
----
-
-*Built for the 2026 FIFA World Cup — USA · Canada · Mexico*
+### Deploying to GitHub Pages
+This project includes a GitHub Actions configuration for automatic deployment:
+1. Create a repository on GitHub.
+2. Push this directory to the `main` branch.
+3. In your GitHub Repository, navigate to **Settings > Pages**.
+4. Set **Source** to **GitHub Actions**.
+5. The workflow will automatically trigger, build, and deploy the tracker to `https://<your-username>.github.io/<repository-name>/`.
