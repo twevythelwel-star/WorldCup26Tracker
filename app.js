@@ -380,7 +380,7 @@ function isMatchPlayedOrLive(home, away) {
 const ESPN_NAMES = {
     "Mexico": "Mexico", "South Africa": "South Africa", "South Korea": "South Korea", "Korea Republic": "South Korea",
     "Czech Republic": "Czechia", "Czechia": "Czechia", "Canada": "Canada", "Switzerland": "Switzerland",
-    "Bosnia and Herzegovina": "Bosnia & Herz.", "Bosnia & Herzegovina": "Bosnia & Herz.", "Qatar": "Qatar",
+    "Bosnia and Herzegovina": "Bosnia & Herz.", "Bosnia & Herzegovina": "Bosnia & Herz.", "Bosnia-Herzegovina": "Bosnia & Herz.", "Qatar": "Qatar",
     "Brazil": "Brazil", "Scotland": "Scotland", "Morocco": "Morocco", "Haiti": "Haiti",
     "United States": "USA", "USA": "USA", "Australia": "Australia", "Paraguay": "Paraguay", "Turkey": "Türkiye", "Türkiye": "Türkiye",
     "Germany": "Germany", "Ecuador": "Ecuador", "Ivory Coast": "Côte d'Ivoire", "Côte d'Ivoire": "Côte d'Ivoire",
@@ -389,7 +389,7 @@ const ESPN_NAMES = {
     "New Zealand": "New Zealand", "Spain": "Spain", "Cape Verde": "Cape Verde", "Saudi Arabia": "Saudi Arabia",
     "Uruguay": "Uruguay", "France": "France", "Norway": "Norway", "Senegal": "Senegal", "Iraq": "Iraq",
     "Argentina": "Argentina", "Austria": "Austria", "Algeria": "Algeria", "Jordan": "Jordan",
-    "Portugal": "Portugal", "Colombia": "Colombia", "DR Congo": "DR Congo", "Congo": "DR Congo",
+    "Portugal": "Portugal", "Colombia": "Colombia", "DR Congo": "DR Congo", "Congo": "DR Congo", "Congo DR": "DR Congo",
     "Democratic Republic of the Congo": "DR Congo", "Uzbekistan": "Uzbekistan",
     "England": "England", "Croatia": "Croatia", "Ghana": "Ghana", "Panama": "Panama",
 };
@@ -409,7 +409,7 @@ async function fetchData() {
     let fetched = false;
     try {
         const res = await fetch(
-            "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard",
+            "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260611-20260719&limit=200",
             { signal: AbortSignal.timeout(6000) }
         );
         if (res.ok) {
