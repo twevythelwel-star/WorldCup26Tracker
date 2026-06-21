@@ -157,16 +157,32 @@
 
         <!-- BRACKET -->
         <div id="page-bracket" class="page">
-            <div style="margin-top:14px" class="section-label">Round of 32 — Knockout Pathway (Jun 28 – Jul 3)</div>
-            <div id="bkt-r32" class="bracket-grid"></div>
-            <div class="two-col" style="margin-top:16px">
+            <div class="bracket-header-row" style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                <div class="section-label" style="margin-bottom:0">2026 WORLD CUP BRACKETOLOGY</div>
+                <div style="display:flex; gap:8px; align-items:center">
+                    <button id="bkt-toggle-proj" class="notif-btn enabled" onclick="toggleBracketProjection()">
+                        <i data-lucide="sparkles" class="icon-inline"></i>Project Bracket
+                    </button>
+                </div>
+            </div>
+            
+            <div class="bracket-outer-scroll">
+                <div id="bracket-tree-view" class="bracket-tree-container">
+                    <!-- Visual Bracket Tree dynamically rendered here -->
+                </div>
+            </div>
+
+            <div class="two-col" style="margin-top:20px">
                 <div>
                     <div class="section-label">Best 3rd-Place Teams (Top 8 Qualify)</div>
                     <div id="bkt-thirds" style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden"></div>
                 </div>
                 <div>
-                    <div class="section-label">Knockout Progression</div>
-                    <div id="bkt-later" class="knockout-row"></div>
+                    <div class="section-label">Knockout Progression Stats</div>
+                    <div id="bkt-later" class="knockout-row" style="display:none"></div>
+                    <div id="bkt-later-stats" class="callout" style="margin-bottom:0">
+                        <!-- Summary stats about qualification progress -->
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,7 @@
+# Local IDE & Skill assets
+.agent/
+design-system/
+
+# OS metadata
+.DS_Store
+Thumbs.db

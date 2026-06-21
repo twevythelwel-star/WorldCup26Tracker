@@ -168,40 +168,40 @@ const FALLBACK_UPCOMING = [
     { group: "J", home: "Jordan", away: "Argentina", date: "Jun 27", time: "9 PM ET", venue: "Dallas" },
     // Round of 32
     { group: "R32", home: "2nd Group A", away: "2nd Group B", date: "Jun 28", time: "2 PM ET", venue: "Los Angeles" },
-    { group: "R32", home: "1st Group C", away: "3rd (A/B/D/E)", date: "Jun 28", time: "", venue: "Boston" },
-    { group: "R32", home: "1st Group B", away: "2nd Group A", date: "Jun 29", time: "", venue: "Toronto" },
-    { group: "R32", home: "1st Group D", away: "3rd (B/C/E/F)", date: "Jun 29", time: "", venue: "Dallas" },
-    { group: "R32", home: "1st Group I", away: "3rd (C/D/F/G/H)", date: "Jun 29", time: "", venue: "New York/NJ" },
+    { group: "R32", home: "1st Group C", away: "2nd Group F", date: "Jun 28", time: "", venue: "Boston" },
+    { group: "R32", home: "1st Group E", away: "3rd (A/B/C/D/F)", date: "Jun 29", time: "", venue: "Toronto" },
+    { group: "R32", home: "1st Group F", away: "2nd Group C", date: "Jun 29", time: "", venue: "Dallas" },
     { group: "R32", home: "2nd Group E", away: "2nd Group I", date: "Jun 30", time: "", venue: "Dallas" },
-    { group: "R32", home: "1st Group F", away: "3rd (C/E/F/H/I)", date: "Jun 30", time: "", venue: "Mexico City" },
+    { group: "R32", home: "1st Group I", away: "3rd (C/D/F/G/H)", date: "Jun 30", time: "", venue: "New York/NJ" },
+    { group: "R32", home: "1st Group A", away: "3rd (C/E/F/H/I)", date: "Jun 30", time: "", venue: "Mexico City" },
     { group: "R32", home: "1st Group L", away: "3rd (E/H/I/J/K)", date: "Jun 30", time: "", venue: "Atlanta" },
-    { group: "R32", home: "1st Group D", away: "3rd (B/E/F/I/J)", date: "Jul 1", time: "", venue: "San Francisco" },
     { group: "R32", home: "1st Group G", away: "3rd (A/E/H/I/J)", date: "Jul 1", time: "", venue: "Seattle" },
-    { group: "R32", home: "2nd Group F", away: "1st Group E", date: "Jul 1", time: "", venue: "Kansas City" },
+    { group: "R32", home: "1st Group D", away: "3rd (B/E/F/I/J)", date: "Jul 1", time: "", venue: "San Francisco" },
     { group: "R32", home: "1st Group H", away: "2nd Group J", date: "Jul 2", time: "", venue: "Los Angeles" },
+    { group: "R32", home: "2nd Group K", away: "2nd Group L", date: "Jul 2", time: "", venue: "Miami" },
     { group: "R32", home: "1st Group B", away: "3rd (E/F/G/I/J)", date: "Jul 2", time: "", venue: "Vancouver" },
-    { group: "R32", home: "1st Group K", away: "2nd Group L", date: "Jul 3", time: "", venue: "Miami" },
-    { group: "R32", home: "1st Group J", away: "2nd Group K", date: "Jul 3", time: "", venue: "Houston" },
-    { group: "R32", home: "2nd Group G", away: "2nd Group H", date: "Jul 3", time: "", venue: "Philadelphia" },
+    { group: "R32", home: "2nd Group D", away: "2nd Group G", date: "Jul 3", time: "", venue: "Philadelphia" },
+    { group: "R32", home: "1st Group J", away: "2nd Group H", date: "Jul 3", time: "", venue: "Houston" },
+    { group: "R32", home: "1st Group K", away: "3rd (D/E/I/J/L)", date: "Jul 3", time: "", venue: "Atlanta" },
 ];
 
 const R32 = [
-    { id: "M73", d: "Jun 28", t1: "Group A 1st", t2: "Group B 2nd", v: "Los Angeles" },
-    { id: "M74", d: "Jun 28", t1: "Group C 1st", t2: "3rd (A/B/D/E)", v: "Boston" },
-    { id: "M75", d: "Jun 29", t1: "Group B 1st", t2: "Group A 2nd", v: "Toronto" },
-    { id: "M76", d: "Jun 29", t1: "Group D 1st", t2: "3rd (B/C/E/F)", v: "Dallas" },
-    { id: "M77", d: "Jun 29", t1: "Group I 1st", t2: "3rd (C/D/F/G/H)", v: "New York/NJ" },
-    { id: "M78", d: "Jun 30", t1: "Group E 2nd", t2: "Group I 2nd", v: "Dallas" },
-    { id: "M79", d: "Jun 30", t1: "Group F 1st", t2: "3rd (C/E/F/H/I)", v: "Mexico City" },
+    { id: "M73", d: "Jun 28", t1: "Group A 2nd", t2: "Group B 2nd", v: "Los Angeles" },
+    { id: "M74", d: "Jun 28", t1: "Group C 1st", t2: "Group F 2nd", v: "Boston" },
+    { id: "M75", d: "Jun 29", t1: "Group E 1st", t2: "3rd (A/B/C/D/F)", v: "Toronto" },
+    { id: "M76", d: "Jun 29", t1: "Group F 1st", t2: "Group C 2nd", v: "Dallas" },
+    { id: "M77", d: "Jun 30", t1: "Group E 2nd", t2: "Group I 2nd", v: "Dallas" },
+    { id: "M78", d: "Jun 30", t1: "Group I 1st", t2: "3rd (C/D/F/G/H)", v: "New York/NJ" },
+    { id: "M79", d: "Jun 30", t1: "Group A 1st", t2: "3rd (C/E/F/H/I)", v: "Mexico City" },
     { id: "M80", d: "Jun 30", t1: "Group L 1st", t2: "3rd (E/H/I/J/K)", v: "Atlanta" },
-    { id: "M81", d: "Jul 1", t1: "Group D 1st", t2: "3rd (B/E/F/I/J)", v: "San Francisco" },
-    { id: "M82", d: "Jul 1", t1: "Group G 1st", t2: "3rd (A/E/H/I/J)", v: "Seattle" },
-    { id: "M83", d: "Jul 1", t1: "Group F 2nd", t2: "Group E 1st", v: "Kansas City" },
-    { id: "M84", d: "Jul 2", t1: "Group H 1st", t2: "Group J 2nd", v: "Los Angeles" },
+    { id: "M81", d: "Jul 1", t1: "Group G 1st", t2: "3rd (A/E/H/I/J)", v: "Seattle" },
+    { id: "M82", d: "Jul 1", t1: "Group D 1st", t2: "3rd (B/E/F/I/J)", v: "San Francisco" },
+    { id: "M83", d: "Jul 2", t1: "Group H 1st", t2: "Group J 2nd", v: "Los Angeles" },
+    { id: "M84", d: "Jul 2", t1: "Group K 2nd", t2: "Group L 2nd", v: "Miami" },
     { id: "M85", d: "Jul 2", t1: "Group B 1st", t2: "3rd (E/F/G/I/J)", v: "Vancouver" },
-    { id: "M86", d: "Jul 3", t1: "Group K 1st", t2: "Group L 2nd", v: "Miami" },
-    { id: "M87", d: "Jul 3", t1: "Group J 1st", t2: "Group K 2nd", v: "Houston" },
-    { id: "M88", d: "Jul 3", t1: "Group G 2nd", t2: "Group H 2nd", v: "Philadelphia" },
+    { id: "M86", d: "Jul 3", t1: "Group D 2nd", t2: "Group G 2nd", v: "Philadelphia" },
+    { id: "M87", d: "Jul 3", t1: "Group J 1st", t2: "Group H 2nd", v: "Houston" },
+    { id: "M88", d: "Jul 3", t1: "Group K 1st", t2: "3rd (D/E/I/J/L)", v: "Atlanta" },
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -283,6 +283,7 @@ let HIST = [];
 let PICKS = loadLS("wc26_picks", {});
 let GRADED = loadLS("wc26_graded", {});
 let MODEL_V = loadLS("wc26_mv", 1);
+let SHOW_PROJECTED_BRACKET = loadLS("wc26_bkt_proj", true);
 let selGrp = "A";
 let cdVal = 60, cdTimer = null;
 
@@ -858,47 +859,269 @@ function renderUpcoming() {
     </div>`).join("");
 }
 
+function bktCardHTML(m) {
+    if (!m) return `
+    <div class="bkt-card empty">
+        <div class="bkt-card-header">TBD</div>
+        <div class="bkt-team-row"><span class="bkt-team-name">TBD</span></div>
+        <div class="bkt-team-row"><span class="bkt-team-name">TBD</span></div>
+    </div>`;
+    
+    const t1 = m.t1 || "TBD";
+    const t2 = m.t2 || "TBD";
+    const isPred = m.isPredicted;
+    
+    // Use stored scores from resolveKnockoutBracket outcome
+    const score1 = m.score1 !== undefined ? m.score1 : "";
+    const score2 = m.score2 !== undefined ? m.score2 : "";
+    
+    const t1WinnerClass = m.winner && m.winner === t1 ? "winner" : (m.winner ? "loser" : "");
+    const t2WinnerClass = m.winner && m.winner === t2 ? "winner" : (m.winner ? "loser" : "");
+    
+    const isSlotPlaceholder1 = t1 && (t1.includes("Group") || t1.includes("3rd") || t1.includes("Winner") || t1.includes("Loser"));
+    const isSlotPlaceholder2 = t2 && (t2.includes("Group") || t2.includes("3rd") || t2.includes("Winner") || t2.includes("Loser"));
+    
+    const flag1 = isSlotPlaceholder1 ? "🗳" : (t1 !== "TBD" ? F(t1) : "🏳");
+    const flag2 = isSlotPlaceholder2 ? "🗳" : (t2 !== "TBD" ? F(t2) : "🏳");
+    
+    return `
+    <div class="bkt-card ${isPred ? "predicted" : ""}">
+        <div class="bkt-card-header">
+            <span>${m.id} · ${m.d}</span>
+            <span>${m.v}</span>
+        </div>
+        <div class="bkt-team-row ${t1WinnerClass}">
+            <div class="bkt-team-left">
+                <span class="bkt-flag">${flag1}</span>
+                <span class="bkt-team-name" title="${t1}">${t1}</span>
+            </div>
+            <div class="bkt-score ${isPred && score1 !== "" ? "proj-score" : ""}">${score1}</div>
+        </div>
+        <div class="bkt-team-row ${t2WinnerClass}">
+            <div class="bkt-team-left">
+                <span class="bkt-flag">${flag2}</span>
+                <span class="bkt-team-name" title="${t2}">${t2}</span>
+            </div>
+            <div class="bkt-score ${isPred && score2 !== "" ? "proj-score" : ""}">${score2}</div>
+        </div>
+    </div>`;
+}
+
 function renderBracket() {
-    const q = getBracketQualifiers();
-    function resolveSlot(label) {
-        const m1 = label.match(/Group ([A-L]) 1st/i);
-        const m2 = label.match(/Group ([A-L]) 2nd/i);
-        if (m1 && q[m1[1] + "_1"]) return { name: `${F(q[m1[1] + "_1"])} ${q[m1[1] + "_1"]}`, known: true };
-        if (m2 && q[m2[1] + "_2"]) return { name: `${F(q[m2[1] + "_2"])} ${q[m2[1] + "_2"]}`, known: true };
-        return { name: label, known: false };
+    // 1. Update the toggle button state
+    const btn = document.getElementById("bkt-toggle-proj");
+    if (btn) {
+        if (SHOW_PROJECTED_BRACKET) {
+            btn.classList.add("enabled");
+            btn.innerHTML = `<i data-lucide="sparkles" class="icon-inline"></i>Project Bracket`;
+        } else {
+            btn.classList.remove("enabled");
+            btn.innerHTML = `<i data-lucide="lock" class="icon-inline"></i>Actual Slots Only`;
+        }
     }
-    document.getElementById("bkt-r32").innerHTML = R32.map(m => {
-        const s1 = resolveSlot(m.t1), s2 = resolveSlot(m.t2);
-        return `<div class="bracket-match">
-      <div class="bracket-id">${m.id} · ${m.d} · ${m.v}</div>
-      <div class="bracket-slot ${s1.known ? "known" : ""}">${s1.name}</div>
-      <div class="bracket-vs">vs</div>
-      <div class="bracket-slot ${s2.known ? "known" : ""}">${s2.name}</div>
-      <div style="font-size:9px;color:${s1.known && s2.known ? "var(--green)" : "var(--muted)"};margin-top:5px;display:flex;align-items:center;gap:4px">
-        ${s1.known && s2.known 
-            ? '<i data-lucide="check-circle" class="icon-inline"></i>Teams confirmed' 
-            : '<i data-lucide="lock" class="icon-inline"></i>TBD after group stage'}
-      </div>
-    </div>`;
-    }).join("");
-    const qualified = Object.keys(q).length;
 
-    renderThirdPlaceStandings(qualified);
+    // 2. Resolve knockout bracket
+    const b = resolveKnockoutBracket(SHOW_PROJECTED_BRACKET);
 
-    document.getElementById("bkt-later").innerHTML = `
-    <div style="font-size:11px;color:var(--muted);margin-bottom:12px">
-      ${qualified > 0 ? `<span style="color:var(--green);font-weight:700">${Math.floor(qualified / 2)}</span> of 24 group-stage slots confirmed` : "Group stage in progress — slots fill automatically as teams qualify"}
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:10px">
-      ${[{ r: "Round of 16", d: "Jul 4–7" }, { r: "Quarter-Finals", d: "Jul 9–11" }, { r: "Semi-Finals", d: "Jul 14–15" }, { r: "3rd Place", d: "Jul 18 · Miami" }, { r: "🏆 FINAL", d: "Jul 19 · MetLife Stadium NJ" }]
-            .map(s => `<div class="knockout-card"><div style="font-size:10px;font-weight:700;color:var(--gold2);margin-bottom:3px">${s.r.includes("FINAL") ? '<i data-lucide="trophy" class="icon-inline"></i>' : ''}${s.r}</div><div style="font-size:11px;color:var(--muted)">${s.d}</div><div style="font-size:11px;color:#334466;margin-top:5px">TBD</div></div>`).join("")}
+    // Helper to determine confirmed pathway
+    function getConnClass(card1, card2) {
+        if (card1 && card2 && card1.winner && card2.winner && !card1.isPredicted && !card2.isPredicted) {
+            return "confirmed";
+        }
+        return "predicted";
+    }
+
+    // 3. Render tree columns
+    // Left Side Side
+    const leftSideHTML = `
+    <div class="bracket-side left-side">
+        <!-- R32 Column (Left) -->
+        <div class="bracket-column round-r32">
+            ${[b.r32.M73, b.r32.M74, b.r32.M75, b.r32.M76, b.r32.M77, b.r32.M78, b.r32.M79, b.r32.M80].map(m => bktCardHTML(m)).join("")}
+        </div>
+        
+        <!-- Connector 1 -->
+        <div class="bkt-connector-col">
+            <div class="bkt-conn-block bkt-conn-block-r32 ${getConnClass(b.r32.M73, b.r32.M74)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+            <div class="bkt-conn-block bkt-conn-block-r32 ${getConnClass(b.r32.M75, b.r32.M76)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+            <div class="bkt-conn-block bkt-conn-block-r32 ${getConnClass(b.r32.M77, b.r32.M78)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+            <div class="bkt-conn-block bkt-conn-block-r32 ${getConnClass(b.r32.M79, b.r32.M80)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+        </div>
+
+        <!-- R16 Column (Left) -->
+        <div class="bracket-column round-r16">
+            ${[b.r16.M89, b.r16.M90, b.r16.M91, b.r16.M92].map(m => bktCardHTML(m)).join("")}
+        </div>
+
+        <!-- Connector 2 -->
+        <div class="bkt-connector-col">
+            <div class="bkt-conn-block bkt-conn-block-r16 ${getConnClass(b.r16.M89, b.r16.M90)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+            <div class="bkt-conn-block bkt-conn-block-r16 ${getConnClass(b.r16.M91, b.r16.M92)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+        </div>
+
+        <!-- QF Column (Left) -->
+        <div class="bracket-column round-qf">
+            ${[b.qf.M97, b.qf.M98].map(m => bktCardHTML(m)).join("")}
+        </div>
+
+        <!-- Connector 3 -->
+        <div class="bkt-connector-col">
+            <div class="bkt-conn-block bkt-conn-block-qf ${getConnClass(b.qf.M97, b.qf.M98)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+        </div>
+
+        <!-- SF Column (Left) -->
+        <div class="bracket-column round-sf">
+            ${bktCardHTML(b.sf.M101)}
+        </div>
     </div>`;
+
+    // Right Side Side
+    const rightSideHTML = `
+    <div class="bracket-side right-side">
+        <!-- R32 Column (Right) -->
+        <div class="bracket-column round-r32">
+            ${[b.r32.M81, b.r32.M82, b.r32.M83, b.r32.M84, b.r32.M85, b.r32.M86, b.r32.M87, b.r32.M88].map(m => bktCardHTML(m)).join("")}
+        </div>
+
+        <!-- Connector 1 -->
+        <div class="bkt-connector-col">
+            <div class="bkt-conn-block bkt-conn-block-r32 ${getConnClass(b.r32.M81, b.r32.M82)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+            <div class="bkt-conn-block bkt-conn-block-r32 ${getConnClass(b.r32.M83, b.r32.M84)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+            <div class="bkt-conn-block bkt-conn-block-r32 ${getConnClass(b.r32.M85, b.r32.M86)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+            <div class="bkt-conn-block bkt-conn-block-r32 ${getConnClass(b.r32.M87, b.r32.M88)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+        </div>
+
+        <!-- R16 Column (Right) -->
+        <div class="bracket-column round-r16">
+            ${[b.r16.M93, b.r16.M94, b.r16.M95, b.r16.M96].map(m => bktCardHTML(m)).join("")}
+        </div>
+
+        <!-- Connector 2 -->
+        <div class="bkt-connector-col">
+            <div class="bkt-conn-block bkt-conn-block-r16 ${getConnClass(b.r16.M93, b.r16.M94)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+            <div class="bkt-conn-block bkt-conn-block-r16 ${getConnClass(b.r16.M95, b.r16.M96)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+        </div>
+
+        <!-- QF Column (Right) -->
+        <div class="bracket-column round-qf">
+            ${[b.qf.M99, b.qf.M100].map(m => bktCardHTML(m)).join("")}
+        </div>
+
+        <!-- Connector 3 -->
+        <div class="bkt-connector-col">
+            <div class="bkt-conn-block bkt-conn-block-qf ${getConnClass(b.qf.M99, b.qf.M100)}">
+                <div class="bkt-conn-branch-top"></div><div class="bkt-conn-branch-bottom"></div>
+            </div>
+        </div>
+
+        <!-- SF Column (Right) -->
+        <div class="bracket-column round-sf">
+            ${bktCardHTML(b.sf.M102)}
+        </div>
+    </div>`;
+
+    // Center Column (Finals & Champion)
+    const finalMatchHTML = bktCardHTML(b.m104);
+    const thirdMatchHTML = bktCardHTML(b.m103);
+    
+    // Check if there is a champion
+    let champFlag = "🏆";
+    let champName = "TBD";
+    let champSubtitle = "Projecting Final Winner...";
+    
+    if (b.m104 && b.m104.winner) {
+        champFlag = F(b.m104.winner);
+        champName = b.m104.winner;
+        champSubtitle = b.m104.isPredicted ? "Predicted World Champion ⚡" : "FIFA World Champion! 🏆";
+    }
+
+    const centerColHTML = `
+    <div class="bracket-center-col">
+        <!-- Champion Box -->
+        <div class="bkt-champ-box">
+            <div class="bkt-champ-title">CHAMPION</div>
+            <span class="bkt-champ-flag">${champFlag}</span>
+            <div class="bkt-champ-name">${champName}</div>
+            <div class="bkt-champ-subtitle">${champSubtitle}</div>
+        </div>
+        
+        <!-- Final Match -->
+        <div style="font-size:9px; font-weight:700; color:var(--gold); letter-spacing:1px; margin-bottom: 4px; text-transform:uppercase; font-family:'Fira Code',monospace;">
+            <i data-lucide="trophy" class="icon-inline"></i>Final Match
+        </div>
+        <div class="bkt-final-match">
+            ${finalMatchHTML}
+        </div>
+
+        <!-- 3rd Place Match -->
+        <div style="font-size:9px; font-weight:700; color:var(--blue); letter-spacing:1px; margin-bottom: 4px; text-transform:uppercase; font-family:'Fira Code',monospace; margin-top:14px;">
+            Third Place Play-off
+        </div>
+        <div class="bkt-third-match">
+            ${thirdMatchHTML}
+        </div>
+    </div>`;
+
+    // Put everything together
+    document.getElementById("bracket-tree-view").innerHTML = `
+        ${leftSideHTML}
+        ${centerColHTML}
+        ${rightSideHTML}
+    `;
+
+    // 4. Render Third Place Standings Table
+    const qCount = Object.keys(getBracketQualifiers()).length;
+    renderThirdPlaceStandings(qCount);
+
+    // 5. Render Knockout progression stats callout
+    const confirmedSlots = Object.keys(getBracketQualifiers()).length * 2; // R32 slots confirmed from groups
+    const playedKO = Object.values(ST.results).filter(r => r.group === "R32" && r.hg != null).length;
+    
+    document.getElementById("bkt-later-stats").innerHTML = `
+        <strong>Tournament Knockout Progression:</strong><br>
+        · Confirmed group stage slots: <strong>${Math.floor(confirmedSlots / 2)}</strong> of 24 slots<br>
+        · Knockout matches completed: <strong>${playedKO}</strong> matches<br>
+        · Current Projection Mode: <strong>${SHOW_PROJECTED_BRACKET ? "Adaptive AI Model (ELO + Form)" : "Confirmed Actuals Only"}</strong>
+    `;
 }
 
 function renderThirdPlaceStandings(qualified) {
     const thirds = [];
+    let rowsSource = g => calcStandings(g);
+    
+    if (SHOW_PROJECTED_BRACKET) {
+        const projResults = getProjectedResults();
+        rowsSource = g => calcProjectedStandings(g, projResults);
+    }
+    
     Object.keys(GROUPS_META).forEach(g => {
-        const rows = calcStandings(g);
+        const rows = rowsSource(g);
         thirds.push({
             group: g,
             team: rows[2].t,
@@ -955,6 +1178,13 @@ function renderThirdPlaceStandings(qualified) {
             </thead>
             <tbody>${rowsHTML}</tbody>
         </table>`;
+}
+
+function toggleBracketProjection() {
+    SHOW_PROJECTED_BRACKET = !SHOW_PROJECTED_BRACKET;
+    saveLS("wc26_bkt_proj", SHOW_PROJECTED_BRACKET);
+    renderBracket();
+    if (window.lucide) lucide.createIcons();
 }
 
 function renderPredict() {
@@ -1473,13 +1703,72 @@ https://twevythelwel-star.github.io/WorldCup26Tracker/`;
 // ─────────────────────────────────────────────────────────────
 // KNOCKOUT BRACKET RESOLVER & TEAM STATUS TRACKER
 // ─────────────────────────────────────────────────────────────
-function resolveKnockoutBracket() {
-    const q = getBracketQualifiers();
+function getProjectedResults() {
+    const projected = [];
+    ST.results.forEach(r => {
+        if (r.hg != null) {
+            projected.push({ ...r });
+        }
+    });
+
+    ST.upcoming.forEach(m => {
+        if (m.group === "R32" || m.group === "R16" || m.group === "QF" || m.group === "SF" || m.group === "Final") return;
+        if (projected.some(p => p.home === m.home && p.away === m.away)) return;
+
+        const p = predictMatch(m.home, m.away, projected, ELO, BIAS);
+        projected.push({
+            group: m.group,
+            home: m.home,
+            away: m.away,
+            hg: p.score[0],
+            ag: p.score[1],
+            date: m.date,
+            status: "Projected",
+            venue: m.venue || ""
+        });
+    });
+
+    return projected;
+}
+
+function calcProjectedStandings(g, projectedResults) {
+    const teams = GROUPS_META[g] || [];
+    const rows = {};
+    teams.forEach(t => rows[t] = { t, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 });
+    projectedResults.filter(r => r.group === g).forEach(r => {
+        const h = rows[r.home], a = rows[r.away];
+        if (!h || !a) return;
+        h.p++; a.p++; h.gf += +r.hg; h.ga += +r.ag; a.gf += +r.ag; a.ga += +r.hg;
+        if (+r.hg > +r.ag) { h.w++; h.pts += 3; a.l++; }
+        else if (+r.hg < +r.ag) { a.w++; a.pts += 3; h.l++; }
+        else { h.d++; h.pts++; a.d++; a.pts++; }
+    });
+    return Object.values(rows).sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        const gd = (a.gf - a.ga), gdb = (b.gf - b.ga);
+        if (gdb !== gd) return gdb - gd;
+        return b.gf - a.gf;
+    });
+}
+
+function getProjectedBracketQualifiers(projectedResults) {
+    const q = {};
     const thirds = [];
     Object.keys(GROUPS_META).forEach(g => {
-        const rows = calcStandings(g);
-        thirds.push({ group: g, team: rows[2].t, pts: rows[2].pts, gd: rows[2].gf - rows[2].ga, gf: rows[2].gf, w: rows[2].w, p: rows[2].p });
+        const rows = calcProjectedStandings(g, projectedResults);
+        q[g + "_1"] = rows[0].t;
+        q[g + "_2"] = rows[1].t;
+        thirds.push({
+            group: g,
+            team: rows[2].t,
+            pts: rows[2].pts,
+            gd: rows[2].gf - rows[2].ga,
+            gf: rows[2].gf,
+            w: rows[2].w,
+            p: rows[2].p
+        });
     });
+
     thirds.sort((a, b) => {
         if (b.pts !== a.pts) return b.pts - a.pts;
         if (b.gd !== a.gd) return b.gd - a.gd;
@@ -1487,18 +1776,69 @@ function resolveKnockoutBracket() {
         return b.w - a.w;
     });
 
-    const topThirds = thirds.slice(0, 8).map(t => t.team);
+    const top8Thirds = thirds.slice(0, 8).map(t => t.team);
+    return { q, top8Thirds };
+}
+
+function resolveKnockoutBracket(projected = true) {
+    let q, topThirds;
+    let resultsForKnockout = ST.results;
+
+    if (projected) {
+        const projResults = getProjectedResults();
+        const qual = getProjectedBracketQualifiers(projResults);
+        q = qual.q;
+        topThirds = qual.top8Thirds;
+        resultsForKnockout = projResults;
+    } else {
+        q = getBracketQualifiers();
+        const thirds = [];
+        Object.keys(GROUPS_META).forEach(g => {
+            const rows = calcStandings(g);
+            if (rows[2]) {
+                thirds.push({ group: g, team: rows[2].t, pts: rows[2].pts, gd: rows[2].gf - rows[2].ga, gf: rows[2].gf, w: rows[2].w, p: rows[2].p });
+            }
+        });
+        thirds.sort((a, b) => {
+            if (b.pts !== a.pts) return b.pts - a.pts;
+            if (b.gd !== a.gd) return b.gd - a.gd;
+            if (b.gf !== a.gf) return b.gf - a.gf;
+            return b.w - a.w;
+        });
+        topThirds = thirds.slice(0, 8).map(t => t.team);
+    }
 
     function getMatchOutcome(t1, t2) {
-        if (!t1 || !t2) return null;
+        if (!t1 || !t2 || t1.includes("Group") || t2.includes("Group") || t1.includes("Winner") || t2.includes("Winner") || t1.includes("3rd") || t2.includes("3rd") || t1 === "TBD" || t2 === "TBD") {
+            return { winner: null, isPredicted: false };
+        }
         const match = ST.results.find(r => 
             ((r.home === t1 && r.away === t2) || (r.home === t2 && r.away === t1)) && r.hg != null
         );
-        if (!match) return null;
-        const isHome = match.home === t1;
-        if (match.hg > match.ag) return isHome ? t1 : t2;
-        if (match.ag > match.hg) return isHome ? t2 : t1;
-        return match.winner || (match.hg > match.ag ? match.home : match.away);
+        if (match) {
+            const isHome = match.home === t1;
+            let winner;
+            if (match.hg > match.ag) winner = isHome ? t1 : t2;
+            else if (match.ag > match.hg) winner = isHome ? t2 : t1;
+            else winner = match.winner || (match.hg > match.ag ? match.home : match.away);
+            return { winner, isPredicted: false };
+        }
+
+        if (projected) {
+            const p = predictMatch(t1, t2, resultsForKnockout, ELO, BIAS);
+            let winner;
+            if (p.score[0] > p.score[1]) {
+                winner = t1;
+            } else if (p.score[1] > p.score[0]) {
+                winner = t2;
+            } else {
+                // Tiebreaker: use ELO win probability
+                winner = p.hw >= p.aw ? t1 : t2;
+            }
+            return { winner, isPredicted: true };
+        }
+
+        return { winner: null, isPredicted: false };
     }
 
     const r32Matches = {};
@@ -1523,6 +1863,7 @@ function resolveKnockoutBracket() {
     }
 
     function resolveTeam(label) {
+        if (!label) return null;
         const m1 = label.match(/Group ([A-L]) 1st/i);
         const m2 = label.match(/Group ([A-L]) 2nd/i);
         if (m1) return q[m1[1] + "_1"] || null;
@@ -1533,14 +1874,19 @@ function resolveKnockoutBracket() {
             const allowed = m3[1].split("/");
             return getThirdQualifierForSlot(allowed);
         }
-        return null;
+        return label;
     }
 
     R32.forEach(m => {
         const t1 = resolveTeam(m.t1);
         const t2 = resolveTeam(m.t2);
-        const winner = getMatchOutcome(t1, t2);
-        r32Matches[m.id] = { id: m.id, d: m.d, v: m.v, t1, t2, winner };
+        const outcome = getMatchOutcome(t1, t2);
+        r32Matches[m.id] = { 
+            id: m.id, d: m.d, v: m.v, 
+            t1: t1 || m.t1, t2: t2 || m.t2, 
+            winner: outcome.winner, isPredicted: outcome.isPredicted,
+            score1: outcome.score1, score2: outcome.score2
+        };
     });
 
     const r16Matches = {};
@@ -1558,8 +1904,13 @@ function resolveKnockoutBracket() {
     r16Definitions.forEach(m => {
         const t1 = r32Matches[m.prev1]?.winner;
         const t2 = r32Matches[m.prev2]?.winner;
-        const winner = getMatchOutcome(t1, t2);
-        r16Matches[m.id] = { id: m.id, d: m.d, v: m.v, t1, t2, winner };
+        const outcome = getMatchOutcome(t1, t2);
+        r16Matches[m.id] = { 
+            id: m.id, d: m.d, v: m.v, 
+            t1: t1 || `Winner ${m.prev1}`, t2: t2 || `Winner ${m.prev2}`, 
+            winner: outcome.winner, isPredicted: outcome.isPredicted,
+            score1: outcome.score1, score2: outcome.score2
+        };
     });
 
     const qfMatches = {};
@@ -1573,8 +1924,13 @@ function resolveKnockoutBracket() {
     qfDefinitions.forEach(m => {
         const t1 = r16Matches[m.prev1]?.winner;
         const t2 = r16Matches[m.prev2]?.winner;
-        const winner = getMatchOutcome(t1, t2);
-        qfMatches[m.id] = { id: m.id, d: m.d, v: m.v, t1, t2, winner };
+        const outcome = getMatchOutcome(t1, t2);
+        qfMatches[m.id] = { 
+            id: m.id, d: m.d, v: m.v, 
+            t1: t1 || `Winner ${m.prev1}`, t2: t2 || `Winner ${m.prev2}`, 
+            winner: outcome.winner, isPredicted: outcome.isPredicted,
+            score1: outcome.score1, score2: outcome.score2
+        };
     });
 
     const sfMatches = {};
@@ -1586,19 +1942,34 @@ function resolveKnockoutBracket() {
     sfDefinitions.forEach(m => {
         const t1 = qfMatches[m.prev1]?.winner;
         const t2 = qfMatches[m.prev2]?.winner;
-        const winner = getMatchOutcome(t1, t2);
-        sfMatches[m.id] = { id: m.id, d: m.d, v: m.v, t1, t2, winner };
+        const outcome = getMatchOutcome(t1, t2);
+        sfMatches[m.id] = { 
+            id: m.id, d: m.d, v: m.v, 
+            t1: t1 || `Winner ${m.prev1}`, t2: t2 || `Winner ${m.prev2}`, 
+            winner: outcome.winner, isPredicted: outcome.isPredicted,
+            score1: outcome.score1, score2: outcome.score2
+        };
     });
 
     const t1_103 = sfMatches["M101"]?.t1 && sfMatches["M101"]?.t2 ? (sfMatches["M101"].winner === sfMatches["M101"].t1 ? sfMatches["M101"].t2 : sfMatches["M101"].t1) : null;
     const t2_103 = sfMatches["M102"]?.t1 && sfMatches["M102"]?.t2 ? (sfMatches["M102"].winner === sfMatches["M102"].t1 ? sfMatches["M102"].t2 : sfMatches["M102"].t1) : null;
-    const w103 = getMatchOutcome(t1_103, t2_103);
-    const m103 = { id: "M103", d: "Jul 18", v: "Miami", t1: t1_103, t2: t2_103, winner: w103 };
+    const outcome103 = getMatchOutcome(t1_103, t2_103);
+    const m103 = { 
+        id: "M103", d: "Jul 18", v: "Miami", 
+        t1: t1_103 || "Loser M101", t2: t2_103 || "Loser M102", 
+        winner: outcome103.winner, isPredicted: outcome103.isPredicted,
+        score1: outcome103.score1, score2: outcome103.score2
+    };
 
     const t1_104 = sfMatches["M101"]?.winner;
     const t2_104 = sfMatches["M102"]?.winner;
-    const w104 = getMatchOutcome(t1_104, t2_104);
-    const m104 = { id: "M104", d: "Jul 19", v: "New York/NJ", t1: t1_104, t2: t2_104, winner: w104 };
+    const outcome104 = getMatchOutcome(t1_104, t2_104);
+    const m104 = { 
+        id: "M104", d: "Jul 19", v: "New York/NJ", 
+        t1: t1_104 || "Winner M101", t2: t2_104 || "Winner M102", 
+        winner: outcome104.winner, isPredicted: outcome104.isPredicted,
+        score1: outcome104.score1, score2: outcome104.score2
+    };
 
     return {
         r32: r32Matches,
@@ -1623,7 +1994,7 @@ function getTeamStatuses() {
         };
     });
 
-    const bkt = resolveKnockoutBracket();
+    const bkt = resolveKnockoutBracket(false);
 
     const r32Teams = new Set();
     Object.values(bkt.r32).forEach(m => {
