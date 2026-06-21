@@ -18,7 +18,8 @@
     <link rel="apple-touch-icon" href="icon-192.png" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="app.js" defer></script>
+    <script src="standings.js?v=3" defer></script>
+    <script src="app.js?v=3" defer></script>
 </head>
 
 <body>
@@ -138,7 +139,16 @@
 
         <!-- GROUPS -->
         <div id="page-groups" class="page">
-            <div style="margin-top:14px;display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px" id="grp-picker"></div>
+            <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px">
+                <div id="grp-picker" style="display:flex; gap:6px; flex-wrap:wrap"></div>
+                <div style="display:flex; gap:10px; align-items:center">
+                    <span id="standings-loading" class="loading-spinner hidden">
+                        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--gold); margin-right:5px; animation:pulse 1s ease-in-out infinite"></span>
+                        Updating standings...
+                    </span>
+                    <span id="standings-timestamp" style="font-size:11px; color:var(--muted)">Last Updated: –</span>
+                </div>
+            </div>
             <div id="grp-detail"></div>
         </div>
 
@@ -279,10 +289,17 @@
 
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker registered successfully:', reg.scope))
-                    .catch(err => console.error('Service Worker registration failed:', err));
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                for (const registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+        if ('caches' in window) {
+            caches.keys().then(names => {
+                for (const name of names) {
+                    caches.delete(name);
+                }
             });
         }
     </script>

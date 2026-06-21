@@ -63,10 +63,20 @@ const TOP_SCORERS = [
 function getBracketQualifiers() {
     const q = {};
     Object.keys(GROUPS_META).forEach(g => {
-        const rows = calcStandings(g);
-        if (rows[0].pts > 0 || rows[0].p > 0) {
-            q[g + "_1"] = rows[0].t;
-            q[g + "_2"] = rows[1].t;
+        let rows;
+        if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g]) {
+            rows = window.StandingsService.data[g];
+            const played = rows.some(x => (x.played ?? x.p) > 0);
+            if (played && rows[0] && rows[1]) {
+                q[g + "_1"] = rows[0].team || rows[0].t;
+                q[g + "_2"] = rows[1].team || rows[1].t;
+            }
+        } else {
+            rows = calcStandings(g);
+            if (rows[0].pts > 0 || rows[0].p > 0) {
+                q[g + "_1"] = rows[0].t;
+                q[g + "_2"] = rows[1].t;
+            }
         }
     });
     return q;
@@ -299,14 +309,40 @@ function getChronologicalVal(dateStr) {
     return (month === "jun" ? 600 : 700) + day;
 }
 
+function getMatchGroup(home, away, parsedGroup) {
+    if (parsedGroup && parsedGroup !== "?") return parsedGroup;
+    
+    // Check if both teams belong to the same group in GROUPS_META
+    const gHome = Object.keys(GROUPS_META).find(g => GROUPS_META[g].includes(home));
+    const gAway = Object.keys(GROUPS_META).find(g => GROUPS_META[g].includes(away));
+    if (gHome && gAway && gHome === gAway) {
+        return gHome;
+    }
+    
+    // Check fallback lists (FALLBACK_RESULTS has group stage results, FALLBACK_UPCOMING has remaining group matches and R32)
+    const fallbackMatch = [...FALLBACK_RESULTS, ...FALLBACK_UPCOMING].find(
+        m => (m.home === home && m.away === away) || (m.home === away && m.away === home)
+    );
+    if (fallbackMatch && fallbackMatch.group) {
+        return fallbackMatch.group;
+    }
+    
+    return "?";
+}
+
 function mergeResults(baseResults, overrides) {
     const merged = [...baseResults];
     overrides.forEach(ur => {
         const idx = merged.findIndex(r => r.home === ur.home && r.away === ur.away);
         if (idx !== -1) {
-            merged[idx] = { ...merged[idx], ...ur };
+            // Keep the existing group if it's valid and the override group is "?" or empty
+            const existingGroup = merged[idx].group;
+            const newGroup = (ur.group && ur.group !== "?") ? ur.group : existingGroup;
+            merged[idx] = { ...merged[idx], ...ur, group: newGroup };
         } else {
-            merged.push(ur);
+            // If it's a new match, try to resolve its group dynamically
+            const newGroup = getMatchGroup(ur.home, ur.away, ur.group);
+            merged.push({ ...ur, group: newGroup });
         }
     });
     return merged;
@@ -502,7 +538,7 @@ function parseESPNData(d) {
             const venue = comp.venue?.fullName || "";
             const note = comp.notes?.[0]?.headline || "";
             const gMatch = note.match(/Group\s+([A-L])/i);
-            const group = gMatch ? gMatch[1].toUpperCase() : "?";
+            const group = getMatchGroup(home, away, gMatch ? gMatch[1].toUpperCase() : "?");
             const o = { group, home, away, hg: (!hg && hg !== 0) ? null : hg, ag: (!ag && ag !== 0) ? null : ag, date, status, venue };
             if (["STATUS_FINAL", "STATUS_FULL_TIME", "STATUS_END_PERIOD"].includes(status)) r.push(o);
             else if (["STATUS_IN_PROGRESS", "STATUS_FIRST_HALF", "STATUS_HALF_TIME", "STATUS_SECOND_HALF"].includes(status)) {
@@ -524,7 +560,8 @@ function parseCommunityData(d) {
             const hg = x.home_score ?? x.homeScore ?? null;
             const ag = x.away_score ?? x.awayScore ?? null;
             const s = x.status || x.matchStatus || "scheduled";
-            const g = (x.group || x.groupId || "?").toString().replace(/group\s*/i, "").toUpperCase().trim().charAt(0);
+            const rawG = (x.group || x.groupId || "?").toString().replace(/group\s*/i, "").toUpperCase().trim().charAt(0);
+            const g = getMatchGroup(home, away, rawG);
             const date = x.date ? new Date(x.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "TBD";
             const o = { group: g, home, away, hg, ag, date, status: s, time: x.time || "", venue: x.venue?.name || x.stadium || "" };
             if (["completed", "FT", "finished"].includes(s)) r.push(o);
@@ -539,10 +576,11 @@ function parseOpenFootballData(d) {
     try {
         const r = [], u = [];
         (d.rounds || []).forEach(round => {
-            const g = (round.name || "?").replace(/group\s*/i, "").trim().charAt(0).toUpperCase();
+            const rawG = (round.name || "?").replace(/group\s*/i, "").trim().charAt(0).toUpperCase();
             (round.matches || []).forEach(m => {
                 const home = normName(m.team1?.name || m.team1 || "");
                 const away = normName(m.team2?.name || m.team2 || "");
+                const g = getMatchGroup(home, away, rawG);
                 const hg = m.score1 ?? null, ag = m.score2 ?? null;
                 const date = m.date || "TBD";
                 if (hg !== null) r.push({ group: g, home, away, hg, ag, date, status: "FT" });
@@ -650,20 +688,50 @@ function matchCardHTML(r, showPred = false) {
 }
 
 function standingsHTML(g) {
-    const rows = calcStandings(g);
+    let rows;
+    if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g]) {
+        rows = window.StandingsService.data[g];
+    } else {
+        rows = calcStandings(g);
+    }
+    
     const trs = rows.map((r, i) => {
-        const gd = r.gf - r.ga;
-        const qb = i < 2 ? `<span class="q-q">Q</span>` : i === 2 ? `<span class="q-3">3rd</span>` : `<span class="q-x">–</span>`;
+        const teamName = r.team || r.t;
+        const played = r.played ?? r.p;
+        const won = r.won ?? r.w;
+        const draw = r.draw ?? r.d;
+        const lost = r.lost ?? r.l;
+        const gf = r.gf;
+        const ga = r.ga;
+        const pts = r.points ?? r.pts;
+        
+        const gd = gf - ga;
         const gdStr = gd > 0 ? "+" + gd : gd;
-        return `<tr class="${i < 2 ? "qual" : i === 2 ? "third" : ""}">
+        
+        let qStatus = r.status;
+        if (!qStatus) {
+            qStatus = i < 2 ? "Q" : i === 2 ? "3rd" : "–";
+        }
+        
+        let qClass = "q-x";
+        if (qStatus === "Q") qClass = "q-q";
+        else if (qStatus === "3rd") qClass = "q-3";
+        else if (qStatus === "E") qClass = "q-e";
+
+        const trClass = qStatus === "Q" ? "qual" : qStatus === "3rd" ? "third" : qStatus === "E" ? "eliminated" : "";
+
+        return `<tr class="${trClass}">
       <td class="ctr" style="color:var(--muted);font-size:10px">${i + 1}</td>
-      <td>${F(r.t)} <span style="font-weight:${i < 2 ? 700 : 400}">${r.t}</span></td>
-      <td class="ctr" style="color:var(--muted)">${r.p}</td>
-      <td class="ctr">${r.w}</td><td class="ctr" style="color:var(--muted)">${r.d}</td><td class="ctr" style="color:var(--muted)">${r.l}</td>
-      <td class="ctr">${r.gf}</td><td class="ctr" style="color:var(--muted)">${r.ga}</td>
-      <td class="${gd > 0 ? "gd-pos" : gd < 0 ? "gd-neg" : "gd-zero"}">${r.p > 0 ? gdStr : "–"}</td>
-      <td class="pts-cell">${r.pts}</td>
-      <td class="ctr">${qb}</td>
+      <td>${F(teamName)} <span style="font-weight:${qStatus === "Q" ? 700 : 400}">${teamName}</span></td>
+      <td class="ctr" style="color:var(--muted)">${played}</td>
+      <td class="ctr">${won}</td>
+      <td class="ctr" style="color:var(--muted)">${draw}</td>
+      <td class="ctr" style="color:var(--muted)">${lost}</td>
+      <td class="ctr">${gf}</td>
+      <td class="ctr" style="color:var(--muted)">${ga}</td>
+      <td class="${gd > 0 ? "gd-pos" : gd < 0 ? "gd-neg" : "gd-zero"}">${played > 0 ? gdStr : "–"}</td>
+      <td class="pts-cell">${pts}</td>
+      <td class="ctr"><span class="${qClass}">${qStatus}</span></td>
     </tr>`;
     }).join("");
     return `<div class="group-card">
@@ -729,19 +797,16 @@ function renderAll() {
     updateHeader();
     renderOverview();
     renderLive();
-    const activeTab = document.querySelector(".tab.active")?.getAttribute("onclick") || "";
-    if (!activeTab.includes("live") || ST.live.length === 0) {
-        renderGroups();
-        renderResults();
-        renderUpcoming();
-        renderBracket();
-        renderPredict();
-        renderAccuracy();
-        renderElo();
-        renderGrade();
-        renderScorers();
-        renderTeams();
-    }
+    renderGroups();
+    renderResults();
+    renderUpcoming();
+    renderBracket();
+    renderPredict();
+    renderAccuracy();
+    renderElo();
+    renderGrade();
+    renderScorers();
+    renderTeams();
     checkNotifications();
     document.getElementById("loading-screen").classList.add("hidden");
     if (window.lucide) lucide.createIcons();
@@ -1404,9 +1469,15 @@ function submitGrade(key, home, away, group, date) {
     updateHeader();
     renderAccuracy();
     renderElo();
+    renderOverview();
+    renderGroups();
+    renderResults();
+    renderUpcoming();
+    renderBracket();
     setTimeout(() => {
         const gc = document.getElementById("gc-" + key);
         if (gc) { gc.style.opacity = "0.5"; gc.style.pointerEvents = "none"; }
+        renderAll();
     }, 2000);
 }
 
@@ -1543,11 +1614,18 @@ function showTab(id, btn) {
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     document.getElementById("page-" + id)?.classList.add("active");
     if (btn) btn.classList.add("active");
+    if (id === "overview") renderOverview();
+    if (id === "live") renderLive();
     if (id === "groups") renderGroups();
+    if (id === "results") renderResults();
+    if (id === "upcoming") renderUpcoming();
+    if (id === "bracket") renderBracket();
     if (id === "predict") renderPredict();
-    if (id === "grade") renderGrade();
+    if (id === "accuracy") renderAccuracy();
+    if (id === "elo") renderElo();
     if (id === "scorers") renderScorers();
     if (id === "teams") renderTeams();
+    if (id === "grade") renderGrade();
     if (window.lucide) lucide.createIcons();
 }
 function setStatus(type, msg) {
@@ -1794,9 +1872,25 @@ function resolveKnockoutBracket(projected = true) {
         q = getBracketQualifiers();
         const thirds = [];
         Object.keys(GROUPS_META).forEach(g => {
-            const rows = calcStandings(g);
-            if (rows[2]) {
-                thirds.push({ group: g, team: rows[2].t, pts: rows[2].pts, gd: rows[2].gf - rows[2].ga, gf: rows[2].gf, w: rows[2].w, p: rows[2].p });
+            let rows;
+            if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g]) {
+                rows = window.StandingsService.data[g];
+                if (rows[2]) {
+                    thirds.push({ 
+                        group: g, 
+                        team: rows[2].team || rows[2].t, 
+                        pts: rows[2].points ?? rows[2].pts, 
+                        gd: rows[2].gd ?? (rows[2].gf - rows[2].ga), 
+                        gf: rows[2].gf, 
+                        w: rows[2].won ?? rows[2].w, 
+                        p: rows[2].played ?? rows[2].p 
+                    });
+                }
+            } else {
+                rows = calcStandings(g);
+                if (rows[2]) {
+                    thirds.push({ group: g, team: rows[2].t, pts: rows[2].pts, gd: rows[2].gf - rows[2].ga, gf: rows[2].gf, w: rows[2].w, p: rows[2].p });
+                }
             }
         });
         thirds.sort((a, b) => {
@@ -2180,5 +2274,8 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     fetchData();
+    if (window.StandingsService) {
+        StandingsService.init();
+    }
     startCountdown();
 });
