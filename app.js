@@ -64,7 +64,7 @@ function getBracketQualifiers() {
     const q = {};
     Object.keys(GROUPS_META).forEach(g => {
         let rows;
-        if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g]) {
+        if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g] && (!USER_RESULTS || USER_RESULTS.length === 0)) {
             rows = window.StandingsService.data[g];
             const played = rows.some(x => (x.played ?? x.p) > 0);
             if (played && rows[0] && rows[1]) {
@@ -689,7 +689,7 @@ function matchCardHTML(r, showPred = false) {
 
 function standingsHTML(g) {
     let rows;
-    if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g]) {
+    if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g] && (!USER_RESULTS || USER_RESULTS.length === 0)) {
         rows = window.StandingsService.data[g];
     } else {
         rows = calcStandings(g);
@@ -1447,6 +1447,9 @@ function submitGrade(key, home, away, group, date) {
         USER_RESULTS.push(ur);
     }
     saveLS("wc26_user_results", USER_RESULTS);
+    if (window.StandingsService) {
+        window.StandingsService.invalidateCache();
+    }
 
     ST.results = mergeResults(FALLBACK_RESULTS, USER_RESULTS);
     runSimulation();
@@ -1594,6 +1597,9 @@ function resetModel() {
         localStorage.removeItem("wc26_bias");
         localStorage.removeItem("wc26_hist");
         localStorage.removeItem("wc26_elo_overrides");
+        if (window.StandingsService) {
+            window.StandingsService.invalidateCache();
+        }
         USER_RESULTS = [];
         PICKS = {};
         GRADED = {};
@@ -1873,7 +1879,7 @@ function resolveKnockoutBracket(projected = true) {
         const thirds = [];
         Object.keys(GROUPS_META).forEach(g => {
             let rows;
-            if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g]) {
+            if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g] && (!USER_RESULTS || USER_RESULTS.length === 0)) {
                 rows = window.StandingsService.data[g];
                 if (rows[2]) {
                     thirds.push({ 

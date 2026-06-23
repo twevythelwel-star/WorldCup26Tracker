@@ -5,6 +5,13 @@ const StandingsService = {
     isUpdating: false,
     updateInterval: null,
 
+    invalidateCache() {
+        this.data = null;
+        this.lastUpdated = null;
+        localStorage.removeItem("wc26_standings_data");
+        localStorage.removeItem("wc26_standings_time");
+    },
+
     async init() {
         // Load cache from localStorage
         const cachedData = localStorage.getItem("wc26_standings_data");
@@ -306,3 +313,8 @@ const StandingsService = {
         }, 3000);
     }
 };
+
+// Expose to window for global access
+if (typeof window !== "undefined") {
+    window.StandingsService = StandingsService;
+}
