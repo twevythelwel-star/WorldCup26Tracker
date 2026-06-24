@@ -357,6 +357,7 @@ main {
    MATCH CARDS
 ═══════════════════════════════════════════════ */
 .match-card {
+    position: relative;
     background: var(--bg2);
     border: 1px solid var(--border);
     border-radius: 10px;
@@ -377,6 +378,108 @@ main {
 
 .match-card.has-pred {
     border-left: 3px solid var(--purple)
+}
+
+/* Tooltip styles */
+.match-scorers-tooltip {
+    position: absolute;
+    bottom: 105%;
+    left: 50%;
+    transform: translate(-50%, 8px) scale(0.95);
+    background: rgba(20, 5, 5, 0.96);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    width: 290px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+}
+
+.match-card:hover .match-scorers-tooltip {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+}
+
+.tooltip-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tooltip-teams {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.tooltip-team-scorers {
+    flex: 1;
+    min-width: 0;
+}
+
+.tooltip-divider {
+    width: 1px;
+    background: var(--border);
+    align-self: stretch;
+}
+
+.team-header {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.scorer-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: #c8d8f0;
+    margin-bottom: 4px;
+}
+
+.ball-icon {
+    font-size: 9px;
+    flex-shrink: 0;
+}
+
+.scorer-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.scorer-min {
+    color: var(--muted);
+    font-size: 8.5px;
+    margin-left: auto;
+    font-family: 'Fira Code', monospace;
+    flex-shrink: 0;
+}
+
+.no-scorers {
+    color: var(--muted);
+    font-size: 10px;
+    font-style: italic;
+    opacity: 0.6;
 }
 
 .match-teams {

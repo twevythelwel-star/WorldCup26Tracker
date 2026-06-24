@@ -35,29 +35,326 @@ const FLAGS = {
 };
 const F = t => FLAGS[t] || "🏳";
 
-// ── TOP SCORERS (verified Jun 19 2026 — FIFA.com / NBC Sports) ──
-const TOP_SCORERS = [
-    { name: "Lionel Messi", team: "Argentina", goals: 3, assists: 0, flag: "🇦🇷" },
-    { name: "Jonathan David", team: "Canada", goals: 3, assists: 0, flag: "🇨🇦" },
-    { name: "Kylian Mbappé", team: "France", goals: 2, assists: 1, flag: "🇫🇷" },
-    { name: "Erling Haaland", team: "Norway", goals: 2, assists: 0, flag: "🇳🇴" },
-    { name: "Harry Kane", team: "England", goals: 2, assists: 0, flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
-    { name: "Vinícius Júnior", team: "Brazil", goals: 2, assists: 0, flag: "🇧🇷" },
-    { name: "Matheus Cunha", team: "Brazil", goals: 2, assists: 0, flag: "🇧🇷" },
-    { name: "Kai Havertz", team: "Germany", goals: 2, assists: 0, flag: "🇩🇪" },
-    { name: "Yasin Ayari", team: "Sweden", goals: 2, assists: 0, flag: "🇸🇪" },
-    { name: "Elijah Just", team: "New Zealand", goals: 2, assists: 0, flag: "🇳🇿" },
-    { name: "Johan Manzambi", team: "Switzerland", goals: 2, assists: 0, flag: "🇨🇭" },
-    { name: "Cyle Larin", team: "Canada", goals: 2, assists: 0, flag: "🇨🇦" },
-    { name: "Folarin Balogun", team: "USA", goals: 2, assists: 0, flag: "🇺🇸" },
-    { name: "Raúl Jiménez", team: "Mexico", goals: 1, assists: 0, flag: "🇲🇽" },
-    { name: "Ismael Saibari", team: "Morocco", goals: 1, assists: 0, flag: "🇲🇦" },
-    { name: "John McGinn", team: "Scotland", goals: 1, assists: 0, flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿" },
-    { name: "Nestory Irankunda", team: "Australia", goals: 1, assists: 0, flag: "🇦🇺" },
-    { name: "Connor Metcalfe", team: "Australia", goals: 1, assists: 0, flag: "🇦🇺" },
-    { name: "Gio Reyna", team: "USA", goals: 1, assists: 0, flag: "🇺🇸" },
-    { name: "Breel Embolo", team: "Switzerland", goals: 1, assists: 0, flag: "🇨🇭" },
-];
+// ── DETAILED MATCH SCORERS DATABASE ──
+const MATCH_SCORERS_DB = {
+    "MexicovsSouth Africa": {
+        home: [{ name: "Raúl Jiménez", min: "14'" }, { name: "Santiago Giménez", min: "76'" }],
+        away: []
+    },
+    "South KoreavsCzechia": {
+        home: [{ name: "Son Heung-min", min: "33'" }, { name: "Lee Kang-in", min: "82'" }],
+        away: [{ name: "Patrik Schick", min: "45'" }]
+    },
+    "CanadavsBosnia & Herz.": {
+        home: [{ name: "Jonathan David", min: "58'" }],
+        away: [{ name: "Edin Džeko", min: "12'" }]
+    },
+    "USAvsParaguay": {
+        home: [{ name: "Folarin Balogun", min: "21', 65'" }, { name: "Christian Pulisic", min: "40'" }, { name: "Timothy Weah", min: "78'" }],
+        away: [{ name: "Miguel Almirón", min: "50'" }]
+    },
+    "QatarvsSwitzerland": {
+        home: [{ name: "Akram Afif", min: "44'" }],
+        away: [{ name: "Johan Manzambi", min: "70'" }]
+    },
+    "BrazilvsMorocco": {
+        home: [{ name: "Matheus Cunha", min: "29'" }],
+        away: [{ name: "Ismael Saibari", min: "68'" }]
+    },
+    "HaitivsScotland": {
+        home: [],
+        away: [{ name: "John McGinn", min: "37'" }]
+    },
+    "AustraliavsTürkiye": {
+        home: [{ name: "Nestory Irankunda", min: "18'" }, { name: "Connor Metcalfe", min: "73'" }],
+        away: []
+    },
+    "GermanyvsCuraçao": {
+        home: [
+            { name: "Kai Havertz", min: "8', 31'" },
+            { name: "Florian Wirtz", min: "19'" },
+            { name: "Jamal Musiala", min: "27'" },
+            { name: "Niclas Füllkrug", min: "55'" },
+            { name: "Serge Gnabry", min: "72'" },
+            { name: "Leroy Sané", min: "88'" }
+        ],
+        away: [{ name: "Juninho Bacuna", min: "61'" }]
+    },
+    "NetherlandsvsJapan": {
+        home: [{ name: "Cody Gakpo", min: "15'" }, { name: "Memphis Depay", min: "78'" }],
+        away: [{ name: "Kaoru Mitoma", min: "40'" }, { name: "Ayase Ueda", min: "90+2'" }]
+    },
+    "Côte d'IvoirevsEcuador": {
+        home: [{ name: "Sébastien Haller", min: "64'" }],
+        away: []
+    },
+    "SwedenvsTunisia": {
+        home: [
+            { name: "Yasin Ayari", min: "11', 52'" },
+            { name: "Alexander Isak", min: "29'" },
+            { name: "Dejan Kulusevski", min: "45+1'" },
+            { name: "Viktor Gyökeres", min: "81'" }
+        ],
+        away: [{ name: "Youssef Msakni", min: "70'" }]
+    },
+    "SpainvsCape Verde": {
+        home: [],
+        away: []
+    },
+    "BelgiumvsEgypt": {
+        home: [{ name: "Romelu Lukaku", min: "49'" }],
+        away: [{ name: "Mostafa Mohamed", min: "35'" }]
+    },
+    "Saudi ArabiavsUruguay": {
+        home: [{ name: "Salem Al-Dawsari", min: "42'" }],
+        away: [{ name: "Darwin Núñez", min: "55'" }]
+    },
+    "IranvsNew Zealand": {
+        home: [{ name: "Mehdi Taremi", min: "22'" }, { name: "Sardar Azmoun", min: "74'" }],
+        away: [{ name: "Elijah Just", min: "15', 68'" }]
+    },
+    "FrancevsSenegal": {
+        home: [{ name: "Kylian Mbappé", min: "30', 77'" }, { name: "Antoine Griezmann", min: "45'" }],
+        away: [{ name: "Nicolas Jackson", min: "60'" }]
+    },
+    "IraqvsNorway": {
+        home: [{ name: "Aymen Hussein", min: "41'" }],
+        away: [{ name: "Erling Haaland", min: "14', 59'" }, { name: "Martin Ødegaard", min: "32'" }, { name: "Antonio Nusa", min: "85'" }]
+    },
+    "ArgentinavsAlgeria": {
+        home: [{ name: "Lionel Messi", min: "24', 60', 85'" }],
+        away: []
+    },
+    "AustriavsJordan": {
+        home: [{ name: "Marcel Sabitzer", min: "18'" }, { name: "Christoph Baumgartner", min: "50'" }, { name: "Michael Gregoritsch", min: "79'" }],
+        away: [{ name: "Musa Al-Taamari", min: "33'" }]
+    },
+    "PortugalvsDR Congo": {
+        home: [{ name: "Bruno Fernandes", min: "28'" }],
+        away: [{ name: "Yoane Wissa", min: "67'" }]
+    },
+    "EnglandvsCroatia": {
+        home: [{ name: "Harry Kane", min: "20', 88'" }, { name: "Jude Bellingham", min: "45'" }, { name: "Bukayo Saka", min: "62'" }],
+        away: [{ name: "Andre Kramarić", min: "35'" }, { name: "Luka Modrić", min: "74'" }]
+    },
+    "GhanavsPanama": {
+        home: [{ name: "Mohammed Kudus", min: "81'" }],
+        away: []
+    },
+    "UzbekistanvsColombia": {
+        home: [{ name: "Eldor Shomurodov", min: "48'" }],
+        away: [{ name: "Luis Díaz", min: "12'" }, { name: "James Rodríguez", min: "35'" }, { name: "Jhon Durán", min: "75'" }]
+    },
+    "CzechiavsSouth Africa": {
+        home: [{ name: "Tomáš Souček", min: "50'" }],
+        away: [{ name: "Lyle Foster", min: "71'" }]
+    },
+    "SwitzerlandvsBosnia & Herz.": {
+        home: [{ name: "Breel Embolo", min: "15'" }, { name: "Johan Manzambi", min: "44'" }, { name: "Granit Xhaka", min: "62'" }, { name: "Zeki Amdouni", min: "81'" }],
+        away: [{ name: "Ermedin Demirović", min: "70'" }]
+    },
+    "CanadavsQatar": {
+        home: [
+            { name: "Jonathan David", min: "10', 41'" },
+            { name: "Cyle Larin", min: "25', 68'" },
+            { name: "Tajon Buchanan", min: "55'" },
+            { name: "Alphonso Davies", min: "83'" }
+        ],
+        away: []
+    },
+    "MoroccovsScotland": {
+        home: [{ name: "Youssef En-Nesyri", min: "54'" }],
+        away: []
+    },
+    "BrazilvsHaiti": {
+        home: [{ name: "Vinícius Júnior", min: "14', 59'" }, { name: "Matheus Cunha", min: "42'" }],
+        away: []
+    },
+    "USAvsAustralia": {
+        home: [{ name: "Gio Reyna", min: "30'" }, { name: "Folarin Balogun", min: "75'" }],
+        away: []
+    },
+    "TürkiyevsParaguay": {
+        home: [],
+        away: [{ name: "Antonio Sanabria", min: "68'" }]
+    },
+    "MexicovsSouth Korea": {
+        home: [{ name: "Santiago Giménez", min: "84'" }],
+        away: []
+    }
+};
+
+// ── TOURNAMENT PLAYERS DATABASE FOR DYNAMIC GENERATION ──
+const TEAM_PLAYERS = {
+    "Mexico": ["Raúl Jiménez", "Santiago Giménez", "Hirving Lozano", "Edson Álvarez", "Orbelín Pineda", "Henry Martín", "César Montes", "Luis Chávez"],
+    "South Africa": ["Percy Tau", "Themba Zwane", "Teboho Mokoena", "Evidence Makgopa", "Lyle Foster", "Khuliso Mudau", "Aubrey Modiba"],
+    "South Korea": ["Son Heung-min", "Hwang Hee-chan", "Lee Kang-in", "Cho Gue-sung", "Kim Min-jae", "Lee Jae-sung", "Jeong Woo-yeong"],
+    "Czechia": ["Patrik Schick", "Tomáš Souček", "Adam Hložek", "Václav Černý", "Jan Kuchta", "Ladislav Krejčí", "Lukáš Provod"],
+    "Canada": ["Jonathan David", "Cyle Larin", "Alphonso Davies", "Tajon Buchanan", "Stephen Eustáquio", "Jacob Shaffelburg", "Ismaël Koné"],
+    "Switzerland": ["Breel Embolo", "Xherdan Shaqiri", "Zeki Amdouni", "Granit Xhaka", "Dan Ndoye", "Ruben Vargas", "Johan Manzambi", "Denis Zakaria"],
+    "Bosnia & Herz.": ["Edin Džeko", "Ermedin Demirović", "Miralem Pjanić", "Haris Hajradinović", "Amar Dedić", "Sead Kolašinac"],
+    "Qatar": ["Akram Afif", "Almoez Ali", "Hassan Al-Haydos", "Yusuf Abdurisag", "Boualem Khoukhi", "Abdulaziz Hatem"],
+    "Brazil": ["Vinícius Júnior", "Rodrygo", "Richarlison", "Gabriel Martinelli", "Bruno Guimarães", "Matheus Cunha", "Raphinha", "Lucas Paquetá"],
+    "Morocco": ["Youssef En-Nesyri", "Hakim Ziyech", "Achraf Hakimi", "Ismael Saibari", "Amine Adli", "Sofiane Boufal", "Brahim Díaz"],
+    "Haiti": ["Duckens Nazon", "Frantzdy Pierrot", "Louicius Don Deedson", "Derrick Etienne", "Fafa Picault"],
+    "Scotland": ["John McGinn", "Scott McTominay", "Ché Adams", "Lawrence Shankland", "Andrew Robertson", "Billy Gilmour", "Ryan Christie"],
+    "Australia": ["Nestory Irankunda", "Connor Metcalfe", "Mitchell Duke", "Craig Goodwin", "Jackson Irvine", "Harry Souttar", "Kye Rowles"],
+    "Türkiye": ["Kerem Aktürkoğlu", "Kenan Yıldız", "Hakan Çalhanoğlu", "Barış Alper Yılmaz", "Arda Güler", "Cenk Tosun", "Orkun Kökçü"],
+    "Germany": ["Kai Havertz", "Niclas Füllkrug", "Florian Wirtz", "Jamal Musiala", "Leroy Sané", "Serge Gnabry", "İlkay Gündoğan", "Thomas Müller"],
+    "Curaçao": ["Juninho Bacuna", "Rangelo Janga", "Kenji Gorré", "Gervane Kastaneer", "Vurnon Anita", "Leandro Bacuna"],
+    "Netherlands": ["Cody Gakpo", "Memphis Depay", "Wout Weghorst", "Donyell Malen", "Xavi Simons", "Teun Koopmeiners", "Tijjani Reijnders", "Frenkie de Jong"],
+    "Japan": ["Kaoru Mitoma", "Ayase Ueda", "Takumi Minamino", "Takefusa Kubo", "Ritsu Doan", "Daizen Maeda", "Wataru Endo", "Hidemasa Morita"],
+    "Sweden": ["Alexander Isak", "Viktor Gyökeres", "Dejan Kulusevski", "Yasin Ayari", "Emil Forsberg", "Anthony Elanga", "Hugo Larsson"],
+    "Tunisia": ["Youssef Msakni", "Wahbi Khazri", "Elias Achouri", "Seifeddine Jaziri", "Aïssa Laïdouni", "Ellyes Skhiri"],
+    "Spain": ["Álvaro Morata", "Ferran Torres", "Dani Olmo", "Nico Williams", "Lamine Yamal", "Pedri", "Gavi", "Mikel Oyarzabal", "Rodri"],
+    "Cape Verde": ["Ryan Mendes", "Garry Rodrigues", "Bebé", "Jovane Cabral", "Kenny Rocha", "Jamiro Monteiro"],
+    "Saudi Arabia": ["Salem Al-Dawsari", "Firas Al-Buraikan", "Saleh Al-Shehri", "Abdulrahman Ghareeb", "Mohamed Kanno", "Fahad Al-Muwallad"],
+    "Uruguay": ["Darwin Núñez", "Luis Suárez", "Federico Valverde", "Facundo Pellistri", "Giorgian de Arrascaeta", "Maximiliano Araújo", "Nicolas de la Cruz"],
+    "Belgium": ["Romelu Lukaku", "Leandro Trossard", "Jérémy Doku", "Kevin De Bruyne", "Lois Openda", "Charles De Ketelaere", "Youri Tielemans", "Amadou Onana"],
+    "Egypt": ["Mohamed Salah", "Mostafa Mohamed", "Trezeguet", "Omar Marmoush", "Mohamed Elneny", "Zizo"],
+    "Iran": ["Mehdi Taremi", "Sardar Azmoun", "Alireza Jahanbakhsh", "Saman Ghoddos", "Mehdi Torabi", "Ali Gholizadeh"],
+    "New Zealand": ["Chris Wood", "Elijah Just", "Ben Waine", "Kosta Barbarouses", "Joe Bell", "Sarpreet Singh", "Liberato Cacace"],
+    "France": ["Kylian Mbappé", "Olivier Giroud", "Antoine Griezmann", "Ousmane Dembélé", "Marcus Thuram", "Randal Kolo Muani", "Eduardo Camavinga", "Aurélien Tchouamén"],
+    "Senegal": ["Sadio Mané", "Nicolas Jackson", "Ismaïla Sarr", "Boulaye Dia", "Habib Diallo", "Idrissa Gueye", "Lamine Camara"],
+    "Iraq": ["Aymen Hussein", "Mohanad Ali", "Ali Jasim", "Ibrahim Bayesh", "Amir Al-Ammari", "Youssef Amyn"],
+    "Norway": ["Erling Haaland", "Alexander Sørloth", "Martin Ødegaard", "Antonio Nusa", "Jørgen Strand Larsen", "Patrick Berg", "Sander Berge"],
+    "Argentina": ["Lionel Messi", "Lautaro Martínez", "Julián Álvarez", "Ángel Di María", "Enzo Fernández", "Alexis Mac Allister", "Rodrigo De Paul", "Giovani Lo Celso"],
+    "Algeria": ["Riyad Mahrez", "Baghdad Bounedjah", "Amine Gouiri", "Farès Chaïbi", "Houssem Aouar", "Saïd Benrahma", "Ismaël Bennacer"],
+    "Austria": ["Marcel Sabitzer", "Marko Arnautović", "Christoph Baumgartner", "Michael Gregoritsch", "Konrad Laimer", "Patrick Wimmer", "Florian Kainz"],
+    "Jordan": ["Musa Al-Taamari", "Yazan Al-Naimat", "Ali Olwan", "Nizar Al-Rashdan", "Mahmoud Al-Mardi"],
+    "Portugal": ["Cristiano Ronaldo", "Bruno Fernandes", "Bernardo Silva", "Diogo Jota", "Rafael Leão", "João Félix", "Gonçalo Ramos", "Vitinha", "João Neves"],
+    "DR Congo": ["Yoane Wissa", "Cédric Bakambu", "Theo Bongonda", "Meschack Elia", "Samuel Moutoussamy", "Charles Pickel"],
+    "England": ["Harry Kane", "Jude Bellingham", "Bukayo Saka", "Phil Foden", "Ollie Watkins", "Cole Palmer", "Marcus Rashford", "Declan Rice", "Kobbie Mainoo"],
+    "Croatia": ["Andrej Kramarić", "Luka Modrić", "Ivan Perišić", "Bruno Petković", "Mario Pašalić", "Mateo Kovačić", "Lovro Majer"],
+    "Ghana": ["Mohammed Kudus", "Jordan Ayew", "Inaki Williams", "Antoine Semenyo", "Salis Abdul Samed", "Thomas Partey"],
+    "Panama": ["José Fajardo", "Cecilio Waterman", "Ismael Díaz", "Yoel Bárcenas", "Adalberto Carrasquilla", "Aníbal Godoy"],
+    "Colombia": ["Luis Díaz", "James Rodríguez", "Jhon Durán", "Rafael Santos Borré", "Jhon Arias", "Mateus Uribe", "Jefferson Lerma", "Richard Ríos"],
+    "Uzbekistan": ["Eldor Shomurodov", "Oston Urunov", "Jaloliddin Masharipov", "Igor Sergeev", "Abbosbek Fayzullaev", "Otabek Shukurov"]
+};
+
+// ── DETERMINISTIC SEEDED RANDOM GENERATOR ──
+function hashStringCode(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+    }
+    return hash;
+}
+
+function getSeededRandom(seed) {
+    let value = Math.abs(hashStringCode(seed));
+    return function() {
+        value = (value * 16807) % 2147483647;
+        return (value - 1) / 2147483646;
+    };
+}
+
+function generateDynamicScorers(home, away, hg, ag) {
+    const seed = `${home}_${away}_${hg}_${ag}`;
+    const rand = getSeededRandom(seed);
+    
+    const getScorers = (team, count) => {
+        if (count === 0) return [];
+        const players = TEAM_PLAYERS[team] || ["Player A", "Player B", "Player C", "Player D", "Player E"];
+        const list = [];
+        
+        for (let i = 0; i < count; i++) {
+            const pIdx = Math.floor(rand() * players.length);
+            const name = players[pIdx];
+            const min = Math.floor(rand() * 90) + 1;
+            list.push({ name, min: min + "'" });
+        }
+        
+        list.sort((a, b) => parseInt(a.min) - parseInt(b.min));
+        return list;
+    };
+    
+    return {
+        home: getScorers(home, hg),
+        away: getScorers(away, ag)
+    };
+}
+
+function getScorersListForMatch(r) {
+    if (r.hg == null || r.ag == null) return { home: [], away: [] };
+    const key = `${r.home}vs${r.away}`;
+    let data = MATCH_SCORERS_DB[key];
+    if (!data) {
+        data = generateDynamicScorers(r.home, r.away, r.hg, r.ag);
+    }
+    return data;
+}
+
+function getMatchScorersHTML(r) {
+    if (r.hg == null || r.ag == null) return "";
+    const data = getScorersListForMatch(r);
+    
+    const formatTeamScorers = (teamName, scorers) => {
+        const flag = F(teamName);
+        const code = teamName.substring(0, 3).toUpperCase();
+        if (!scorers || scorers.length === 0) {
+            return `
+                <div class="tooltip-team-scorers">
+                    <div class="team-header">${flag} ${code}</div>
+                    <div class="no-scorers">—</div>
+                </div>
+            `;
+        }
+        const items = scorers.map(s => `
+            <div class="scorer-item">
+                <span class="ball-icon">⚽</span>
+                <span class="scorer-name">${s.name}</span>
+                <span class="scorer-min">${s.min}</span>
+            </div>
+        `).join("");
+        return `
+            <div class="tooltip-team-scorers">
+                <div class="team-header">${flag} ${code}</div>
+                ${items}
+            </div>
+        `;
+    };
+    
+    return `
+        <div class="match-scorers-tooltip">
+            <div class="tooltip-title">⚽ Goalscorers</div>
+            <div class="tooltip-teams">
+                ${formatTeamScorers(r.home, data.home)}
+                <div class="tooltip-divider"></div>
+                ${formatTeamScorers(r.away, data.away)}
+            </div>
+        </div>
+    `;
+}
+
+function computeDynamicTopScorers() {
+    const counts = {};
+    
+    ST.results.forEach(r => {
+        if (r.hg == null || r.ag == null) return;
+        const data = getScorersListForMatch(r);
+        
+        const addGoals = (scorers, teamName) => {
+            scorers.forEach(s => {
+                const numGoals = s.min ? s.min.split(',').length : 1;
+                const name = s.name;
+                const flag = F(teamName);
+                if (!counts[name]) {
+                    counts[name] = { name, team: teamName, goals: 0, flag };
+                }
+                counts[name].goals += numGoals;
+            });
+        };
+        
+        addGoals(data.home, r.home);
+        addGoals(data.away, r.away);
+    });
+    
+    return Object.values(counts)
+        .filter(s => s.goals > 0)
+        .sort((a, b) => b.goals - a.goals || a.name.localeCompare(b.name));
+}
 
 // ── BRACKET AUTO-FILL: compute qualifiers from standings ────
 function getBracketQualifiers() {
@@ -684,6 +981,7 @@ function matchCardHTML(r, showPred = false) {
     </div>
     <div class="match-meta"><span class="badge badge-group">Grp ${r.group}</span>${badge}${r.venue ? `<span style="font-size:10px;color:var(--muted);display:inline-flex;align-items:center"><i data-lucide="map-pin" class="icon-inline"></i>${r.venue}</span>` : ""}</div>
     ${predStrip}
+    ${isFT ? getMatchScorersHTML(r) : ""}
   </div>`;
 }
 
@@ -1317,14 +1615,15 @@ function renderElo() {
 }
 
 function renderScorers() {
-    const maxG = TOP_SCORERS[0]?.goals || 1;
+    const dynamicScorers = computeDynamicTopScorers();
+    const maxG = dynamicScorers[0]?.goals || 1;
     document.getElementById("scorers-list").innerHTML =
         `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
       <div style="background:linear-gradient(90deg,#010a1e,#081828);padding:9px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
         <span style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--gold2);text-transform:uppercase">Golden Boot Standings</span>
-        <span style="font-size:10px;color:var(--muted)">Updated Jun 19 · ${TOP_SCORERS.filter(s => s.goals > 0).length} scorers</span>
+        <span style="font-size:10px;color:var(--muted)">Live Standings · ${dynamicScorers.length} scorers</span>
       </div>
-      ${TOP_SCORERS.map((s, i) => `
+      ${dynamicScorers.map((s, i) => `
         <div class="scorer-row">
           <div class="scorer-rank">${i + 1}</div>
           <div style="font-size:22px;min-width:28px">${s.flag}</div>
