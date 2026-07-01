@@ -729,97 +729,353 @@ const ESPN_NAMES = {
 };
 function normName(n) { return ESPN_NAMES[n] || n; }
 
+const SOURCES_METADATA = [
+    { id: "espn", name: "ESPN Scoreboard", url: "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260611-20260719&limit=200" },
+    { id: "community", name: "Community API", url: "https://worldcup2026api.vercel.app/api/matches" },
+    { id: "openfootball", name: "OpenFootball Github", url: "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json" },
+    { id: "apifootball", name: "API-Football (RapidAPI)", url: "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=1&season=2026" },
+    { id: "sportmonks", name: "Sportmonks API", url: "https://api.sportmonks.com/v3/football/fixtures" },
+    { id: "sportsdataio", name: "SportsDataIO API", url: "https://api.sportsdata.io/v3/soccer/scores/json/Schedule/1" },
+    { id: "footballdata", name: "Football-Data.org", url: "https://api.football-data.org/v4/competitions/WC/matches" },
+    { id: "thesportsdb", name: "TheSportsDB API", url: "https://www.thesportsdb.com/api/v1/json/3/eventsseason.php?id=4328&s=2026" },
+    { id: "opta", name: "Opta Analytics", url: "https://api.statsperform.com/soccer/opta/" },
+    { id: "fifaofficial", name: "FIFA.com Official", url: "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026" },
+    { id: "fbref", name: "FBref Analytics", url: "https://fbref.com/en/comps/1/World-Cup-Stats" },
+    { id: "transfermarkt", name: "Transfermarkt Database", url: "https://www.transfermarkt.com/weltmeisterschaft-2026/startseite/pokalwettbewerb/WM26" },
+    { id: "flashscore", name: "Flashscore Live Center", url: "https://www.flashscore.com/football/world-cup/" }
+];
+
+let FEED_STATUS = {};
+
+function toggleFeedModal() {
+    const overlay = document.getElementById("feed-overlay");
+    const modal = document.getElementById("feed-modal");
+    if (overlay && modal) {
+        overlay.classList.toggle("show");
+        modal.classList.toggle("show");
+        if (modal.classList.contains("show")) {
+            updateFeedUI();
+        }
+    }
+}
+
+function updateFeedUI() {
+    const list = document.getElementById("feed-list");
+    if (!list) return;
+    
+    list.innerHTML = SOURCES_METADATA.map(src => {
+        const info = FEED_STATUS[src.id] || { name: src.name, status: "pending", latency: 0 };
+        let badgeClass = "badge-feed-fetching";
+        let statusText = "Pending";
+        
+        switch(info.status) {
+            case "fetching":
+                badgeClass = "badge-feed-fetching";
+                statusText = "Connecting…";
+                break;
+            case "ok":
+                badgeClass = "badge-feed-ok";
+                statusText = "Active (OK)";
+                break;
+            case "auth_error":
+                badgeClass = "badge-feed-auth_error";
+                statusText = "Auth Error";
+                break;
+            case "offline":
+                badgeClass = "badge-feed-offline";
+                statusText = "Offline / CORS";
+                break;
+            case "parse_error":
+                badgeClass = "badge-feed-parse_error";
+                statusText = "Parse Error";
+                break;
+            default:
+                badgeClass = "badge-feed-fetching";
+                statusText = "Idle";
+                break;
+        }
+        
+        const latencyText = info.latency > 0 ? `${info.latency}ms` : "-";
+        
+        return `
+            <div class="feed-item">
+                <div class="feed-info">
+                    <span class="feed-name">${src.name}</span>
+                </div>
+                <div class="feed-status-row">
+                    <span class="feed-latency">${latencyText}</span>
+                    <span class="feed-badge ${badgeClass}">${statusText}</span>
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+function parseSourceData(sourceId, text) {
+    try {
+        const d = JSON.parse(text);
+        if (sourceId === "espn") return parseESPNData(d);
+        if (sourceId === "community") return parseCommunityData(d);
+        if (sourceId === "openfootball") return parseOpenFootballData(d);
+        
+        const r = [], l = [], u = [];
+        
+        if (sourceId === "apifootball") {
+            const fixtures = d.response || [];
+            fixtures.forEach(x => {
+                const home = normName(x.teams?.home?.name || "");
+                const away = normName(x.teams?.away?.name || "");
+                if (!home || !away) return;
+                const hg = x.goals?.home ?? null;
+                const ag = x.goals?.away ?? null;
+                const s = x.fixture?.status?.short || "";
+                const date = x.fixture?.date ? new Date(x.fixture.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "TBD";
+                const time = x.fixture?.date ? new Date(x.fixture.date).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : "";
+                const venue = x.fixture?.venue?.name || "";
+                const g = getMatchGroup(home, away, "?");
+                const o = { group: g, home, away, hg, ag, date, time, venue, status: s };
+                if (["FT", "AET", "PEN"].includes(s)) r.push(o);
+                else if (["1H", "2H", "HT", "ET", "P"].includes(s)) { o.minute = x.fixture?.status?.elapsed || ""; l.push(o); }
+                else u.push(o);
+            });
+            return { results: r, live: l, upcoming: u };
+        }
+        
+        if (sourceId === "thesportsdb") {
+            const events = d.events || [];
+            events.forEach(x => {
+                const home = normName(x.strHomeTeam || "");
+                const away = normName(x.strAwayTeam || "");
+                if (!home || !away) return;
+                const hg = x.intHomeScore != null ? parseInt(x.intHomeScore) : null;
+                const ag = x.intAwayScore != null ? parseInt(x.intAwayScore) : null;
+                const date = x.dateEvent ? new Date(x.dateEvent).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "TBD";
+                const time = x.strTime ? x.strTime.substring(0, 5) : "";
+                const venue = x.strVenue || "";
+                const g = getMatchGroup(home, away, "?");
+                const o = { group: g, home, away, hg, ag, date, time, venue, status: hg != null ? "FT" : "NS" };
+                if (hg != null) r.push(o);
+                else u.push(o);
+            });
+            return { results: r, live: l, upcoming: u };
+        }
+        
+        if (sourceId === "footballdata") {
+            const matches = d.matches || [];
+            matches.forEach(x => {
+                const home = normName(x.homeTeam?.name || "");
+                const away = normName(x.awayTeam?.name || "");
+                if (!home || !away) return;
+                const hg = x.score?.fullTime?.home ?? null;
+                const ag = x.score?.fullTime?.away ?? null;
+                const s = x.status || "";
+                const date = x.utcDate ? new Date(x.utcDate).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "TBD";
+                const time = x.utcDate ? new Date(x.utcDate).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : "";
+                const g = getMatchGroup(home, away, "?");
+                const o = { group: g, home, away, hg, ag, date, time, venue: "", status: s };
+                if (s === "FINISHED") r.push(o);
+                else if (["LIVE", "IN_PLAY", "PAUSED"].includes(s)) { o.minute = ""; l.push(o); }
+                else u.push(o);
+            });
+            return { results: r, live: l, upcoming: u };
+        }
+        
+        return { results: [], live: [], upcoming: [] };
+    } catch(e) {
+        return null;
+    }
+}
+
+function resolveUpcomingPlaceholderMatches() {
+    const q = getBracketQualifiers();
+    const thirds = [];
+    Object.keys(GROUPS_META).forEach(g => {
+        let rows;
+        if (window.StandingsService && window.StandingsService.data && window.StandingsService.data[g] && (!USER_RESULTS || USER_RESULTS.length === 0)) {
+            rows = window.StandingsService.data[g];
+            if (rows[2]) {
+                thirds.push({ 
+                    group: g, 
+                    team: rows[2].team || rows[2].t, 
+                    pts: rows[2].points ?? rows[2].pts, 
+                    gd: rows[2].gd ?? (rows[2].gf - rows[2].ga), 
+                    gf: rows[2].gf, 
+                    w: rows[2].won ?? rows[2].w, 
+                    p: rows[2].played ?? rows[2].p 
+                });
+            }
+        } else {
+            rows = calcStandings(g);
+            if (rows[2]) {
+                thirds.push({ group: g, team: rows[2].t, pts: rows[2].pts, gd: rows[2].gf - rows[2].ga, gf: rows[2].gf, w: rows[2].w, p: rows[2].p });
+            }
+        }
+    });
+    thirds.sort((a, b) => {
+        if (b.pts !== a.pts) return b.pts - a.pts;
+        if (b.gd !== a.gd) return b.gd - a.gd;
+        if (b.gf !== a.gf) return b.gf - a.gf;
+        return b.w - a.w;
+    });
+    const topThirds = thirds.slice(0, 8).map(t => t.team);
+    const assignedThirds = new Set();
+    
+    function resolvePlaceholder(label) {
+        if (!label) return null;
+        let m = label.match(/Group\s+([A-L])\s+1st/i) || label.match(/1st\s+Group\s+([A-L])/i);
+        if (m) return q[m[1].toUpperCase() + "_1"] || null;
+        m = label.match(/Group\s+([A-L])\s+2nd/i) || label.match(/2nd\s+Group\s+([A-L])/i);
+        if (m) return q[m[1].toUpperCase() + "_2"] || null;
+        
+        m = label.match(/3rd\s+\(([A-L\/]+)\)/i);
+        if (m) {
+            const allowed = m[1].toUpperCase().split("/");
+            for (let team of topThirds) {
+                if (assignedThirds.has(team)) continue;
+                const grp = Object.keys(GROUPS_META).find(g => GROUPS_META[g].includes(team));
+                if (allowed.includes(grp)) {
+                    assignedThirds.add(team);
+                    return team;
+                }
+            }
+            for (let team of topThirds) {
+                if (!assignedThirds.has(team)) {
+                    assignedThirds.add(team);
+                    return team;
+                }
+            }
+        }
+        return null;
+    }
+
+    ST.upcoming = ST.upcoming.map(m => {
+        const resolvedHome = resolvePlaceholder(m.home);
+        const resolvedAway = resolvePlaceholder(m.away);
+        return {
+            ...m,
+            home: resolvedHome || m.home,
+            away: resolvedAway || m.away
+        };
+    });
+}
+
 async function fetchData() {
-    setStatus("loading", "Fetching live data…");
+    setStatus("loading", "Connecting to live feeds…");
+    
+    // Reset all status to fetching in UI
+    SOURCES_METADATA.forEach(src => {
+        FEED_STATUS[src.id] = { name: src.name, status: "fetching", latency: 0 };
+    });
+    updateFeedUI();
 
     USER_RESULTS = loadLS("wc26_user_results", []);
 
+    const fetchPromises = SOURCES_METADATA.map(async src => {
+        const start = Date.now();
+        try {
+            // Check keys in localStorage for specific feeds
+            if (src.id === "apifootball" && !localStorage.getItem("wc26_key_apifootball")) {
+                FEED_STATUS[src.id] = { name: src.name, status: "auth_error", latency: 0 };
+                return null;
+            }
+            if (src.id === "sportmonks" && !localStorage.getItem("wc26_key_sportmonks")) {
+                FEED_STATUS[src.id] = { name: src.name, status: "auth_error", latency: 0 };
+                return null;
+            }
+            if (src.id === "sportsdataio" && !localStorage.getItem("wc26_key_sportsdataio")) {
+                FEED_STATUS[src.id] = { name: src.name, status: "auth_error", latency: 0 };
+                return null;
+            }
+            if (src.id === "opta" && !localStorage.getItem("wc26_key_opta")) {
+                FEED_STATUS[src.id] = { name: src.name, status: "auth_error", latency: 0 };
+                return null;
+            }
+
+            const targetUrl = src.url + (src.url.includes("?") ? "&" : "?") + "cb=" + Date.now();
+            const proxiedUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(targetUrl);
+            
+            const options = { signal: AbortSignal.timeout(8000) };
+            if (src.id === "apifootball") {
+                options.headers = {
+                    "x-rapidapi-key": localStorage.getItem("wc26_key_apifootball") || "placeholder",
+                    "x-rapidapi-host": "api-football-v1.p.rapidapi.com"
+                };
+            } else if (src.id === "footballdata") {
+                options.headers = {
+                    "X-Auth-Token": localStorage.getItem("wc26_key_footballdata") || "placeholder"
+                };
+            }
+
+            const res = await fetch(proxiedUrl, options);
+            const latency = Date.now() - start;
+            
+            if (res.ok) {
+                const text = await res.text();
+                const parsed = parseSourceData(src.id, text);
+                if (parsed) {
+                    FEED_STATUS[src.id] = { name: src.name, status: "ok", latency };
+                    return parsed;
+                } else {
+                    FEED_STATUS[src.id] = { name: src.name, status: "parse_error", latency };
+                }
+            } else {
+                const statusStr = (res.status === 401 || res.status === 403) ? "auth_error" : "error";
+                FEED_STATUS[src.id] = { name: src.name, status: statusStr, latency };
+            }
+        } catch (e) {
+            const latency = Date.now() - start;
+            FEED_STATUS[src.id] = { name: src.name, status: "offline", latency };
+        }
+        return null;
+    });
+
+    const parsedFeeds = await Promise.all(fetchPromises);
+    
+    // Merge results from all successful feeds
     let currentResults = mergeResults(FALLBACK_RESULTS, USER_RESULTS);
     let currentUpcoming = FALLBACK_UPCOMING;
     let currentLive = [];
     let source = "static";
-    let sourceMsg = "";
-
-    let fetched = false;
-    try {
-        const res = await fetch(
-            "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260611-20260719&limit=200",
-            { signal: AbortSignal.timeout(6000) }
-        );
-        if (res.ok) {
-            const d = await res.json();
-            const parsed = parseESPNData(d);
-            if (parsed) {
+    
+    parsedFeeds.forEach((parsed, index) => {
+        if (parsed) {
+            const srcId = SOURCES_METADATA[index].id;
+            if (parsed.results && parsed.results.length) {
                 currentResults = mergeResults(currentResults, parsed.results);
+                source = srcId;
+            }
+            if (parsed.live && parsed.live.length) {
                 currentLive = parsed.live;
-                source = "espn";
-                sourceMsg = `ESPN · ${new Date().toLocaleTimeString()}`;
-                fetched = true;
+            }
+            if (parsed.upcoming && parsed.upcoming.length) {
+                currentUpcoming = parsed.upcoming;
             }
         }
-    } catch (e) { }
-
-    if (!fetched) {
-        try {
-            const res = await fetch(
-                "https://worldcup2026api.vercel.app/api/matches",
-                { signal: AbortSignal.timeout(5000) }
-            );
-            if (res.ok) {
-                const d = await res.json();
-                const parsed = parseCommunityData(d);
-                if (parsed) {
-                    currentResults = mergeResults(currentResults, parsed.results);
-                    if (parsed.upcoming.length) currentUpcoming = parsed.upcoming;
-                    currentLive = parsed.live;
-                    source = "community";
-                    sourceMsg = `Community API · ${new Date().toLocaleTimeString()}`;
-                    fetched = true;
-                }
-            }
-        } catch (e) { }
-    }
-
-    if (!fetched) {
-        try {
-            const res = await fetch(
-                "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json",
-                { signal: AbortSignal.timeout(5000) }
-            );
-            if (res.ok) {
-                const d = await res.json();
-                const parsed = parseOpenFootballData(d);
-                if (parsed) {
-                    currentResults = mergeResults(currentResults, parsed.results);
-                    if (parsed.upcoming.length) currentUpcoming = parsed.upcoming;
-                    source = "openfootball";
-                    sourceMsg = `GitHub/OpenFootball · ${new Date().toLocaleTimeString()}`;
-                    fetched = true;
-                }
-            }
-        } catch (e) { }
-    }
+    });
 
     ST.results = currentResults;
     ST.upcoming = currentUpcoming;
     ST.live = currentLive;
     ST.source = source;
 
-    if (fetched) {
-        setStatus("ok", sourceMsg);
+    const activeFeeds = Object.keys(FEED_STATUS).filter(k => FEED_STATUS[k].status === "ok");
+    if (activeFeeds.length > 0) {
+        setStatus("ok", `Feeds active: ${activeFeeds.length}/${SOURCES_METADATA.length} · Last sync: ${new Date().toLocaleTimeString()}`);
     } else {
         setStatus("warn", `Static data (verified FIFA.com Jun 19) · All APIs unreachable · ${new Date().toLocaleTimeString()}`);
     }
 
     runSimulation();
+    resolveUpcomingPlaceholderMatches();
     renderAll();
+    updateFeedUI();
 }
 
 function parseESPNData(d) {
     try {
         const events = d.events || [];
         if (!events.length) return null;
-        const r = [], l = [];
+        const r = [], l = [], u = [];
         events.forEach(ev => {
             const comp = ev.competitions?.[0]; if (!comp) return;
             const home = normName(comp.competitors?.find(c => c.homeAway === "home")?.team?.displayName || "");
@@ -832,17 +1088,20 @@ function parseESPNData(d) {
             const status = ev.status?.type?.name || "";
             const clock = ev.status?.displayClock || "";
             const date = new Date(ev.date).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+            const time = new Date(ev.date).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
             const venue = comp.venue?.fullName || "";
             const note = comp.notes?.[0]?.headline || "";
             const gMatch = note.match(/Group\s+([A-L])/i);
             const group = getMatchGroup(home, away, gMatch ? gMatch[1].toUpperCase() : "?");
-            const o = { group, home, away, hg: (!hg && hg !== 0) ? null : hg, ag: (!ag && ag !== 0) ? null : ag, date, status, venue };
+            const o = { group, home, away, hg: (!hg && hg !== 0) ? null : hg, ag: (!ag && ag !== 0) ? null : ag, date, time, status, venue };
             if (["STATUS_FINAL", "STATUS_FULL_TIME", "STATUS_END_PERIOD"].includes(status)) r.push(o);
             else if (["STATUS_IN_PROGRESS", "STATUS_FIRST_HALF", "STATUS_HALF_TIME", "STATUS_SECOND_HALF"].includes(status)) {
                 o.minute = clock; l.push(o);
+            } else if (["STATUS_SCHEDULED"].includes(status) || status.includes("SCHEDULED")) {
+                u.push(o);
             }
         });
-        return { results: r, live: l };
+        return { results: r, live: l, upcoming: u };
     } catch (e) { return null; }
 }
 
@@ -1945,10 +2204,23 @@ function startCountdown() {
         cdVal--;
         const el = document.getElementById("countdown");
         if (el) el.textContent = cdVal;
-        if (cdVal <= 0) { fetchData(); startCountdown(); }
+        if (cdVal <= 0) {
+            if (window.StandingsService) {
+                const hasLive = ST.live && ST.live.length > 0;
+                window.StandingsService.fetchLatestStandings(hasLive);
+            }
+            fetchData();
+            startCountdown();
+        }
     }, 1000);
 }
-function manualRefresh() { fetchData(); startCountdown(); }
+function manualRefresh() {
+    if (window.StandingsService) {
+        window.StandingsService.fetchLatestStandings(true);
+    }
+    fetchData();
+    startCountdown();
+}
 
 // ─────────────────────────────────────────────────────────────
 // NOTIFICATIONS
@@ -2220,7 +2492,12 @@ function resolveKnockoutBracket(projected = true) {
             if (match.hg > match.ag) winner = isHome ? t1 : t2;
             else if (match.ag > match.hg) winner = isHome ? t2 : t1;
             else winner = match.winner || (match.hg > match.ag ? match.home : match.away);
-            return { winner, isPredicted: false };
+            return { 
+                winner, 
+                isPredicted: false,
+                score1: isHome ? match.hg : match.ag,
+                score2: isHome ? match.ag : match.hg
+            };
         }
 
         if (projected) {

@@ -46,7 +46,8 @@
                 <div class="refresh-info">
                     Auto-refresh in <span id="countdown">30</span>s &nbsp;·&nbsp;
                     <span class="refresh-link" onclick="manualRefresh()"><i data-lucide="refresh-cw" class="icon-inline"></i>Now</span> &nbsp;·&nbsp;
-                    <button class="notif-btn" id="notif-btn" onclick="toggleNotifications()"><i data-lucide="bell" class="icon-inline"></i>Alerts</button>
+                    <button class="notif-btn" id="notif-btn" onclick="toggleNotifications()"><i data-lucide="bell" class="icon-inline"></i>Alerts</button> &nbsp;·&nbsp;
+                    <button class="notif-btn" id="feed-btn" onclick="toggleFeedModal()"><i data-lucide="database" class="icon-inline"></i>Feeds</button>
                 </div>
             </div>
         </div>
@@ -286,6 +287,23 @@
         </div>
 
     </main>
+
+    <!-- FEEDS MODAL -->
+    <div id="feed-overlay" class="feed-overlay" onclick="toggleFeedModal()"></div>
+    <div id="feed-modal" class="feed-modal">
+        <div class="feed-modal-header">
+            <h3><i data-lucide="database" class="icon-inline" style="color:var(--gold)"></i> Live Data Feeds Monitor</h3>
+            <button class="close-btn" onclick="toggleFeedModal()">&times;</button>
+        </div>
+        <div class="feed-modal-body">
+            <p style="font-size:12px; color:var(--muted); margin-bottom:16px;">
+                The tracker queries all 13 sources in parallel via CORS-bypassing proxy. Feeds with Auth Errors require licensing keys stored in your browser's localStorage.
+            </p>
+            <div id="feed-list" class="feed-list">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
 
     <script>
         if ('serviceWorker' in navigator) {

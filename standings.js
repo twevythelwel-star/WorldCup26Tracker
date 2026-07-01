@@ -26,30 +26,32 @@ const StandingsService = {
             }
         }
 
-        // Fetch standings if no cache or if cache is older than 5 minutes (300 seconds)
-        const now = Date.now();
-        const age = this.lastUpdated ? (now - this.lastUpdated.getTime()) / 1000 : Infinity;
-        
-        if (age >= 300 || !this.data) {
-            await this.fetchLatestStandings();
-        } else {
-            this.updateTimestamp();
-        }
+        // Fetch standings via cache-checking function
+        await this.fetchLatestStandings(false);
 
         // Start 5-minute auto-refresh (300 seconds)
         this.startRefreshTimer();
     },
 
-    async fetchLatestStandings() {
+    async fetchLatestStandings(force = false) {
         if (this.isUpdating) return;
+
+        const now = Date.now();
+        const age = this.lastUpdated ? (now - this.lastUpdated.getTime()) / 1000 : Infinity;
+        if (!force && age < 300 && this.data) {
+            this.updateTimestamp();
+            return;
+        }
+
         this.isUpdating = true;
         this.setLoadingState(true);
         
         let success = false;
         try {
-            // Fetch live standings from ESPN
-            const res = await fetch("https://site.api.espn.com/apis/v2/sports/soccer/fifa.world/standings", {
-                signal: AbortSignal.timeout(8000)
+            // Fetch live standings from ESPN via CORS proxy with cache-buster
+            const targetUrl = "https://site.api.espn.com/apis/v2/sports/soccer/fifa.world/standings?cb=" + Date.now();
+            const res = await fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(targetUrl), {
+                signal: AbortSignal.timeout(10000)
             });
             if (res.ok) {
                 const d = await res.json();
