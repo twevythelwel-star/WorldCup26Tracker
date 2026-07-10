@@ -18,8 +18,8 @@
     <link rel="apple-touch-icon" href="icon-192.png" />
     <link rel="stylesheet" href="style.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="standings.js?v=3" defer></script>
-    <script src="app.js?v=3" defer></script>
+    <script src="standings.js?v=8" defer></script>
+    <script src="app.js?v=8" defer></script>
 </head>
 
 <body>
@@ -264,8 +264,8 @@
         <!-- SCORERS -->
         <div id="page-scorers" class="page">
             <div style="margin-top:14px" class="section-label">🥇 Golden Boot Race — Top Scorers</div>
-            <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Updated from live sources every 30
-                seconds. Source: FIFA.com / NBC Sports.</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Goalscorers pulled from the OpenFootball
+                live feed (refreshed every 30s). Matches without published scorers yet are marked as estimated.</div>
             <div id="scorers-list"></div>
             <div style="margin-top:20px" class="section-label">Tournament Stats</div>
             <div id="tournament-stats"></div>
@@ -297,7 +297,7 @@
         </div>
         <div class="feed-modal-body">
             <p style="font-size:12px; color:var(--muted); margin-bottom:16px;">
-                The tracker queries all 13 sources in parallel via CORS-bypassing proxy. Feeds with Auth Errors require licensing keys stored in your browser's localStorage.
+                The tracker queries every source below in parallel. ESPN and OpenFootball are keyless and CORS-native; feeds marked Auth Error need a licensing key stored in your browser's localStorage.
             </p>
             <div id="feed-list" class="feed-list">
                 <!-- Dynamically populated -->
@@ -307,16 +307,36 @@
 
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(registrations => {
-                for (const registration of registrations) {
-                    registration.unregister();
-                }
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(reg => {
+                    console.log('[Service Worker] Registered successfully with scope:', reg.scope);
+                    
+                    // Periodically check for updates (every hour)
+                    setInterval(() => {
+                        reg.update();
+                    }, 3600000);
+
+                    // Setup listener to monitor updates
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('[Service Worker] New update installed and ready.');
+                            }
+                        });
+                    });
+                }).catch(err => {
+                    console.error('[Service Worker] Registration failed:', err);
+                });
             });
-        }
-        if ('caches' in window) {
-            caches.keys().then(names => {
-                for (const name of names) {
-                    caches.delete(name);
+
+            // Reload all open pages when a new service worker takes control (skips waiting -> activates -> controllerchange)
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    console.log('[Service Worker] Controller changed. Reloading page...');
+                    window.location.reload();
                 }
             });
         }

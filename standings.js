@@ -8,14 +8,14 @@ const StandingsService = {
     invalidateCache() {
         this.data = null;
         this.lastUpdated = null;
-        localStorage.removeItem("wc26_standings_data");
-        localStorage.removeItem("wc26_standings_time");
+        localStorage.removeItem("wc26_standings_data_v4");
+        localStorage.removeItem("wc26_standings_time_v4");
     },
 
     async init() {
         // Load cache from localStorage
-        const cachedData = localStorage.getItem("wc26_standings_data");
-        const cachedTime = localStorage.getItem("wc26_standings_time");
+        const cachedData = localStorage.getItem("wc26_standings_data_v4");
+        const cachedTime = localStorage.getItem("wc26_standings_time_v4");
         
         if (cachedData && cachedTime) {
             try {
@@ -48,9 +48,9 @@ const StandingsService = {
         
         let success = false;
         try {
-            // Fetch live standings from ESPN via CORS proxy with cache-buster
+            // Fetch live standings from ESPN directly (supports CORS natively)
             const targetUrl = "https://site.api.espn.com/apis/v2/sports/soccer/fifa.world/standings?cb=" + Date.now();
-            const res = await fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(targetUrl), {
+            const res = await fetch(targetUrl, {
                 signal: AbortSignal.timeout(10000)
             });
             if (res.ok) {
@@ -59,8 +59,8 @@ const StandingsService = {
                 if (parsed) {
                     this.data = parsed;
                     this.lastUpdated = new Date();
-                    localStorage.setItem("wc26_standings_data", JSON.stringify(this.data));
-                    localStorage.setItem("wc26_standings_time", this.lastUpdated.getTime().toString());
+                    localStorage.setItem("wc26_standings_data_v4", JSON.stringify(this.data));
+                    localStorage.setItem("wc26_standings_time_v4", this.lastUpdated.getTime().toString());
                     success = true;
                 }
             }
@@ -76,8 +76,8 @@ const StandingsService = {
                     const parsed = await res.json();
                     this.data = parsed;
                     this.lastUpdated = new Date();
-                    localStorage.setItem("wc26_standings_data", JSON.stringify(this.data));
-                    localStorage.setItem("wc26_standings_time", this.lastUpdated.getTime().toString());
+                    localStorage.setItem("wc26_standings_data_v4", JSON.stringify(this.data));
+                    localStorage.setItem("wc26_standings_time_v4", this.lastUpdated.getTime().toString());
                     success = true;
                     console.log("Local fallback standings loaded successfully.");
                 }
@@ -162,58 +162,6 @@ const StandingsService = {
 
                 standings[groupLetter] = parsedTeams;
             });
-
-            // Ensure Group L matches user requirement 9 exactly (fallbacks or override if values differ)
-            standings["L"] = [
-                {
-                  "team": "England",
-                  "played": 1,
-                  "won": 1,
-                  "draw": 0,
-                  "lost": 0,
-                  "gf": 4,
-                  "ga": 2,
-                  "gd": 2,
-                  "points": 3,
-                  "status": "Q"
-                },
-                {
-                  "team": "Ghana",
-                  "played": 1,
-                  "won": 1,
-                  "draw": 0,
-                  "lost": 0,
-                  "gf": 1,
-                  "ga": 0,
-                  "gd": 1,
-                  "points": 3,
-                  "status": "3rd"
-                },
-                {
-                  "team": "Panama",
-                  "played": 1,
-                  "won": 0,
-                  "draw": 0,
-                  "lost": 1,
-                  "gf": 0,
-                  "ga": 1,
-                  "gd": -1,
-                  "points": 0,
-                  "status": "-"
-                },
-                {
-                  "team": "Croatia",
-                  "played": 1,
-                  "won": 0,
-                  "draw": 0,
-                  "lost": 1,
-                  "gf": 2,
-                  "ga": 4,
-                  "gd": -2,
-                  "points": 0,
-                  "status": "-"
-                }
-            ];
 
             return Object.keys(standings).length > 0 ? standings : null;
         } catch (e) {

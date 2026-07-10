@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wc26-tracker-v3';
+const CACHE_NAME = 'wc26-tracker-v8';
 const ASSETS_TO_CACHE = [
   'index.html',
   'style.css',
@@ -45,7 +45,9 @@ self.addEventListener('fetch', event => {
   if (
     url.hostname.includes('espn.com') || 
     url.hostname.includes('vercel.app') || 
-    url.hostname.includes('githubusercontent.com')
+    url.hostname.includes('githubusercontent.com') ||
+    url.hostname.includes('allorigins.win') ||
+    url.hostname.includes('corsproxy.io')
   ) {
     event.respondWith(
       fetch(req).catch(() => {
