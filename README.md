@@ -66,10 +66,19 @@ npx serve .
 
 *Note: Progressive Web App (PWA) installation and Service Worker caching require a secure context (`https://` or `localhost`).*
 
-### Deploying to GitHub Pages
-This project includes a GitHub Actions configuration for automatic deployment:
-1. Create a repository on GitHub.
-2. Push this directory to the `main` branch.
-3. In your GitHub Repository, navigate to **Settings > Pages**.
-4. Set **Source** to **GitHub Actions**.
-5. The workflow will automatically trigger, build, and deploy the tracker to `https://<your-username>.github.io/<repository-name>/`.
+### Deploying via GitHub Actions
+Deployment is automated through GitHub Actions ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)): **every push to `main` publishes the site to GitHub Pages**, and the workflow can also be run manually from the **Actions** tab (`workflow_dispatch`).
+
+**One-time setup** — in **Settings → Pages → Build and deployment**, set **Source** to **GitHub Actions**. (If Source is left on *Deploy from a branch*, the workflow's final deploy step will fail.)
+
+**Everyday workflow** once that's set:
+
+```bash
+git add -A
+git commit -m "your change"
+git push        # pushing to main auto-deploys
+```
+
+The live site publishes to `https://<your-username>.github.io/<repository-name>/` — for this repo, <https://twevythelwel-star.github.io/WorldCup26Tracker/>.
+
+> **Remember to bump the cache version** when you change `app.js`, `style.css`, or `standings.js`: increment `?v=N` on the script tags in `index.html` **and** `CACHE_NAME` in `sw.js` together, so the service worker serves the new files instead of cached ones.
